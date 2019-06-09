@@ -25,6 +25,10 @@
     "api"
   ],
   "author": "Ovie Okeh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ovieokeh/shopstack.git"
+  },
   "license": "Apache-2.0",
   "dependencies": {
     "@babel/polyfill": "^7.2.5",

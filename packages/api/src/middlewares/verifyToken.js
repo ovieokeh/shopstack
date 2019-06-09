@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { respond } from '../utilities';
+import { respond, Queries } from '../utilities';
 
 dotenv.config();
 
@@ -12,35 +12,33 @@ dotenv.config();
  * @param {Function} next
  */
 const verifyToken = async (request, response, next) => {
-  // const bearer = request.headers['user-key'];
-  // const privateKey = process.env.SECRET_KEY;
+  const bearer = request.headers['user-key'];
+  const privateKey = process.env.SECRET_KEY;
 
-  // if (!bearer) {
-  //   respond(response, 'error', 401, 'no token provided');
-  //   return;
-  // }
+  if (!bearer) {
+    respond(response, 'error', 401, 'no token provided');
+    return;
+  }
 
-  // const accessToken = bearer.split(' ')[1];
+  const accessToken = bearer.split(' ')[1];
 
-  // jwt.verify(accessToken, privateKey, async (error, decoded) => {
-  //   if (error) {
-  //     respond(response, 'error', 401, 'unable to verify token');
-  //     return;
-  //   }
+  jwt.verify(accessToken, privateKey, async (error, decoded) => {
+    if (error) {
+      respond(response, 'error', 401, 'unable to verify token');
+      return;
+    }
 
-  //   const customer = await Customer.findByPk(decoded.customerId);
+    const customer = await Queries.findCustomerById(decoded.customer_id);
 
-  //   if (!customer) {
-  //     respond(response, 'error', 401, 'unable to verify token');
-  //     return;
-  //   }
+    if (!customer) {
+      respond(response, 'error', 401, 'unable to verify token');
+      return;
+    }
 
-  //   delete customer.dataValues.password;
-  //   request.customer = customer;
+    request.customer = customer;
 
-  //   next();
-  // });
-  next();
+    next();
+  });
 };
 
 export default verifyToken;

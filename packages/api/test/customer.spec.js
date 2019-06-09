@@ -20,11 +20,11 @@ describe('Customer', () => {
   //   country: 'Global',
   //   shippingRegionId: 4,
   // };
-  // const dummyPhones = {
-  //   dayPhone: '+123456789',
-  //   evePhone: '+987654321',
-  //   mobPhone: '+678954321',
-  // };
+  const dummyPhones = {
+    dayPhone: '+123456789',
+    evePhone: '+987654321',
+    mobPhone: '+678954321',
+  };
   // const validCreditCard = '4299908212121231';
   // const incompleteCreditCard = '4000909012';
   let token;
@@ -220,6 +220,70 @@ describe('Customer', () => {
           expect(res.body.customer).to.not.be(null);
           expect(res.body.accessToken).to.not.be(null);
           token = res.body.data.accessToken;
+          done();
+        });
+    });
+  });
+
+  describe('Profile - PUT /customers', () => {
+    describe('Authorization', () => {
+      it('should handle requests without a token', done => {
+        chai
+          .request(app)
+          .put('/api/customers')
+          .end((_, res) => {
+            expect(res.status).to.be(401);
+            expect(res.body.message).to.be('no token provided');
+            done();
+          });
+      });
+
+      it('should handle requests with an invalid token', done => {
+        chai
+          .request(app)
+          .put('/api/customers')
+          .set('user-key', `${token}invalid`)
+          .end((_, res) => {
+            expect(res.status).to.be(401);
+            expect(res.body.message).to.be('unable to verify token');
+            done();
+          });
+      });
+    });
+
+    describe('Validation', () => {
+      it('should handle missing details fields', done => {
+        chai
+          .request(app)
+          .put('/api/customers')
+          .set('user-key', token)
+          .send({})
+          .end((_, res) => {
+            expect(res.status).to.be(422);
+            expect(res.body.message).to.be('validation error');
+            expect(res.body.data.name.msg).to.be('name field is required');
+            expect(res.body.data.email.msg).to.be('email field is required');
+            done();
+          });
+      });
+    });
+
+    it("should successfully update a customer's details", done => {
+      chai
+        .request(app)
+        .put('/api/customers')
+        .set('user-key', token)
+        .send({
+          name: dummyCustomer.name,
+          email: dummyCustomer.email,
+          ...dummyPhones,
+        })
+        .end((_, res) => {
+          expect(res.status).to.be(200);
+          expect(res.body.message).to.be('customer updated successfully');
+          expect(res.body.data.day_phone).to.be(dummyPhones.dayPhone);
+          expect(res.body.data.eve_phone).to.be(dummyPhones.evePhone);
+          expect(res.body.data.mob_phone).to.be(dummyPhones.mobPhone);
           done();
         });
     });
