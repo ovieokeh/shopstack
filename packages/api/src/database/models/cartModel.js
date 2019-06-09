@@ -1,11 +1,12 @@
 import runQuery from '..';
+import ProductModel from './productModel';
 
 class CartModel {
   static async add(details) {
     const { cartId, productId, attributes } = details;
 
-    const product = await runQuery('SELECT name FROM product WHERE product_id = ?', [productId]);
-    if (!product.length) return null;
+    const product = await ProductModel.getByID({ productId });
+    if (!product) return null;
 
     const itemId = await runQuery('CALL shopping_cart_add_product(?, ?, ?)', [
       cartId,
