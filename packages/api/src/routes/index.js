@@ -3,6 +3,7 @@ import customerRoutes from './customerRoutes';
 import stripeRoutes from './stripeRoutes';
 import attributeRoutes from './attributeRoutes';
 import categoryRoutes from './categoryRoutes';
+import departmentRoutes from './departmentRoutes';
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ router.use(customerRoutes);
 router.use(stripeRoutes);
 router.use(attributeRoutes);
 router.use(categoryRoutes);
+router.use(departmentRoutes);
 
 router.use('*', (_, res) => {
   res.status(200).json({
