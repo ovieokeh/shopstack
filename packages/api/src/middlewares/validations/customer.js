@@ -63,6 +63,43 @@ class CustomerValidations {
     request.customer = { ...customer };
     next();
   }
+
+  /**
+   * Validates all customer update requests
+   * @param {Object} request
+   * @param {Object} response
+   * @param {Function} next
+   */
+  static async update(request, response, next) {
+    const url = request.url.split('/');
+    const field = url[url.length - 1];
+    let errors;
+
+    switch (field) {
+      case 'address':
+        validate.address(request);
+        errors = request.validationErrors(true);
+        break;
+
+      case 'creditCard':
+        validate.creditCard(request);
+        errors = request.validationErrors(true);
+        break;
+
+      default:
+        validate.customerDetails(request);
+        errors = request.validationErrors(true);
+        break;
+    }
+
+    if (errors) {
+      respond(response, 'error', 422, 'validation error', errors);
+      return;
+    }
+
+    request.field = field;
+    next();
+  }
 }
 
 export default CustomerValidations;

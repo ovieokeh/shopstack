@@ -1,5 +1,5 @@
 import runQuery from '../database';
-import { auth } from '../utilities';
+import { auth, Queries } from '../utilities';
 
 /**
  * This class contains all customer related actions.
@@ -19,8 +19,7 @@ class CustomerService {
     const results = await runQuery(`CALL customer_add(?, ?, ?)`, [name, email, password]);
     const customerId = results[0]['LAST_INSERT_ID()'];
 
-    const customerDB = await runQuery(`CALL customer_get_customer(?)`, [customerId]);
-    const customer = { ...customerDB[0] };
+    const customer = await Queries.findCustomerById(customerId);
 
     delete customer.password;
     const token = `Bearer ${auth.generateToken(customer)}`;
@@ -43,6 +42,37 @@ class CustomerService {
     delete customer.password;
 
     return { customer, token };
+  }
+
+  /**
+   * Updates a customer's record in the database and returns the new details
+   * @param {String} field the record to be updated e.g creditCard, address, etc.
+   * @param {Object} newDetails
+   * @param {Object} customer
+   * @returns {Object} an object containing the updated details
+   * @static
+   */
+  static async update(newDetails, customer) {
+    const { name, email } = newDetails;
+    const password = newDetails.password || customer.password;
+    const dayPhone = newDetails.dayPhone || customer.day_phone;
+    const evePhone = newDetails.evePhone || customer.eve_phone;
+    const mobPhone = newDetails.mobPhone || customer.mob_phone;
+
+    await runQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', [
+      customer.customer_id,
+      name,
+      email,
+      password,
+      dayPhone,
+      evePhone,
+      mobPhone,
+    ]);
+
+    const updatedCustomer = await Queries.findCustomerById(customer.customer_id);
+    delete updatedCustomer.password;
+
+    return updatedCustomer;
   }
 }
 
