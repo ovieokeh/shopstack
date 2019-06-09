@@ -52,22 +52,53 @@ class CustomerService {
    * @returns {Object} an object containing the updated details
    * @static
    */
-  static async update(newDetails, customer) {
+  static async update(type, newDetails, customer) {
     const { name, email } = newDetails;
     const password = newDetails.password || customer.password;
     const dayPhone = newDetails.dayPhone || customer.day_phone;
     const evePhone = newDetails.evePhone || customer.eve_phone;
     const mobPhone = newDetails.mobPhone || customer.mob_phone;
+    const creditCard = newDetails.creditCard || customer.credit_card;
+    const address1 = newDetails.address1 || customer.address_1;
+    const address2 = newDetails.address2 || customer.address_2;
+    const city = newDetails.city || customer.city;
+    const region = newDetails.region || customer.region;
+    const postalCode = newDetails.postalCode || customer.postal_code;
+    const country = newDetails.country || customer.country;
+    const shippingRegionId = newDetails.shippingRegionId || customer.shipping_region_id;
 
-    await runQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', [
-      customer.customer_id,
-      name,
-      email,
-      password,
-      dayPhone,
-      evePhone,
-      mobPhone,
-    ]);
+    switch (type) {
+      case 'creditCard':
+        await runQuery('CALL customer_update_credit_card(?,? )', [
+          customer.customer_id,
+          creditCard,
+        ]);
+        break;
+
+      case 'address':
+        await runQuery('CALL customer_update_address(?, ?, ?, ?, ?, ?, ?, ?)', [
+          customer.customer_id,
+          address1,
+          address2,
+          city,
+          region,
+          postalCode,
+          country,
+          shippingRegionId,
+        ]);
+        break;
+
+      default:
+        await runQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', [
+          customer.customer_id,
+          name,
+          email,
+          password,
+          dayPhone,
+          evePhone,
+          mobPhone,
+        ]);
+    }
 
     const updatedCustomer = await Queries.findCustomerById(customer.customer_id);
     delete updatedCustomer.password;

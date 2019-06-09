@@ -66,6 +66,7 @@ class CustomerController {
    */
   static async getProfile(request, response) {
     const { customer } = request;
+    delete customer.password;
     respond(response, 'success', 200, 'customer retrieved successfully', customer);
   }
 
@@ -80,8 +81,11 @@ class CustomerController {
    * @static
    */
   static async update(request, response) {
+    const { url } = request;
+    const type = url.split('/')[2];
+
     try {
-      const updatedCustomer = await CustomerService.update(request.body, request.customer);
+      const updatedCustomer = await CustomerService.update(type, request.body, request.customer);
 
       respond(response, 'success', 200, 'customer updated successfully', updatedCustomer);
     } catch (error) {
