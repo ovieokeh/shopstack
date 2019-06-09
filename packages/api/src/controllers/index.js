@@ -1,4 +1,5 @@
 import CustomerController from './customerController';
 import StripeController from './stripeController';
+import AttributeController from './attributeController';
 
-export { CustomerController, StripeController };
+export { CustomerController, StripeController, AttributeController };
