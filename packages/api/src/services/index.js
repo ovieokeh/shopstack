@@ -1,3 +1,4 @@
-import CustomerService from './CustomerService';
+import CustomerService from './customerService';
+import AttributeService from './attributeService';
 
-export { CustomerService };
+export { CustomerService, AttributeService };
