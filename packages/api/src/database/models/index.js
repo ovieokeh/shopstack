@@ -3,5 +3,6 @@ import AttributeModel from './attributeModel';
 import CategoryModel from './categoryModel';
 import DepartmentModel from './departmentModel';
 import ShippingModel from './shippingModel';
+import TaxModel from './taxModel';
 
-export { CustomerModel, AttributeModel, CategoryModel, DepartmentModel, ShippingModel };
+export { CustomerModel, AttributeModel, CategoryModel, DepartmentModel, ShippingModel, TaxModel };
