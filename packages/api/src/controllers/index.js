@@ -5,6 +5,7 @@ import CategoryController from './categoryController';
 import DepartmentController from './departmentController';
 import ShippingController from './shippingController';
 import TaxController from './taxController';
+import CartController from './cartController';
 
 export {
   CustomerController,
@@ -14,4 +15,5 @@ export {
   DepartmentController,
   ShippingController,
   TaxController,
+  CartController,
 };

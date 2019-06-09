@@ -13,9 +13,9 @@ BEGIN
 
   -- Create new shopping cart record, or increase quantity of existing record
   IF productQuantity IS NULL THEN
-    INSERT INTO shopping_cart(item_id, cart_id, product_id, attributes,
+    INSERT INTO shopping_cart(cart_id, product_id, attributes,
                               quantity, added_on)
-           VALUES (UUID(), inCartId, inProductId, inAttributes, 1, NOW());
+           VALUES (inCartId, inProductId, inAttributes, 1, NOW());
   ELSE
     UPDATE shopping_cart
     SET    quantity = quantity + 1, buy_now = true
@@ -23,4 +23,10 @@ BEGIN
            AND product_id = inProductId
            AND attributes = inAttributes;
   END IF;
+
+  SELECT item_id
+  FROM   shopping_cart
+  WHERE  cart_id = inCartId
+         AND product_id = inProductId
+         AND attributes = inAttributes;
 END
