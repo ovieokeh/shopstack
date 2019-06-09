@@ -27,7 +27,7 @@ describe('Customer', () => {
   // };
   // const validCreditCard = '4299908212121231';
   // const incompleteCreditCard = '4000909012';
-  // let token;
+  let token;
 
   describe('Register - POST /customers', () => {
     describe('Validations', () => {
@@ -123,6 +123,103 @@ describe('Customer', () => {
         .end((_, res) => {
           expect(res.status).to.be(409);
           expect(res.body.message).to.be('this email address is already in use');
+          done();
+        });
+    });
+  });
+
+  describe('Login - POST /customers/login', () => {
+    describe('Validations', () => {
+      it('should handle missing fields', done => {
+        chai
+          .request(app)
+          .post('/api/customers/login')
+          .send()
+          .end((_, res) => {
+            expect(res.status).to.be(422);
+            expect(res.body.message).to.be('validation error');
+            expect(res.body.data.email.msg).to.be('email field is required');
+            expect(res.body.data.password.msg).to.be('password field must not be empty');
+            done();
+          });
+      });
+
+      it('should handle missing email field', done => {
+        chai
+          .request(app)
+          .post('/api/customers/login')
+          .send({
+            email: undefined,
+            password: dummyCustomer.password,
+          })
+          .end((_, res) => {
+            expect(res.status).to.be(422);
+            expect(res.body.message).to.be('validation error');
+            expect(res.body.data.email.msg).to.be('email field is required');
+            done();
+          });
+      });
+
+      it('should handle missing password field', done => {
+        chai
+          .request(app)
+          .post('/api/customers/login')
+          .send({
+            email: dummyCustomer.email,
+            password: undefined,
+          })
+          .end((_, res) => {
+            expect(res.status).to.be(422);
+            expect(res.body.message).to.be('validation error');
+            expect(res.body.data.password.msg).to.be('password field must not be empty');
+            done();
+          });
+      });
+    });
+
+    describe('Authorization', () => {
+      it('should handle wrong password', done => {
+        chai
+          .request(app)
+          .post('/api/customers/login')
+          .send({
+            email: dummyCustomer.email,
+            password: 'wrongpassword',
+          })
+          .end((_, res) => {
+            expect(res.status).to.be(401);
+            expect(res.body.message).to.be('invalid login credentials');
+            done();
+          });
+      });
+
+      it('should handle wrong email', done => {
+        chai
+          .request(app)
+          .post('/api/customers/login')
+          .send({
+            email: 'wrongemail@test.com',
+            password: dummyCustomer.password,
+          })
+          .end((_, res) => {
+            expect(res.status).to.be(401);
+            expect(res.body.message).to.be('invalid login credentials');
+            done();
+          });
+      });
+    });
+
+    it('should log in a customer successfully', done => {
+      chai
+        .request(app)
+        .post('/api/customers/login')
+        .send(dummyCustomer)
+        .end((_, res) => {
+          expect(res.status).to.be(200);
+          expect(res.body.message).to.be('customer logged in successfully');
+          expect(res.body.customer).to.not.be(null);
+          expect(res.body.accessToken).to.not.be(null);
+          token = res.body.data.accessToken;
           done();
         });
     });
