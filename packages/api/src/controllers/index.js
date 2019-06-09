@@ -3,6 +3,7 @@ import StripeController from './stripeController';
 import AttributeController from './attributeController';
 import CategoryController from './categoryController';
 import DepartmentController from './departmentController';
+import ShippingController from './shippingController';
 
 export {
   CustomerController,
@@ -10,4 +11,5 @@ export {
   AttributeController,
   CategoryController,
   DepartmentController,
+  ShippingController,
 };
