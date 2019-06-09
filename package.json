@@ -1,0 +1,29 @@
+{
+  "name": "shopstack",
+  "version": "1.0.0",
+  "description": "An ecommerce website built on Node.js and React.js",
+  "main": "src/index.js",
+  "engines": {
+    "node": "11.9.0",
+    "npm": "6.9.0"
+  },
+  "scripts": {
+    "install:all": "$(npm bin)/lerna exec \"npm install\" --stream",
+    "dev": "$(npm bin)/lerna run dev --stream",
+    "build": "$(npm bin)/lerna run build --stream",
+    "start": "node ./packages/api/dist/index.js",
+    "test": "$(npm bin)/lerna run test --stream",
+    "heroku-postbuild": "npm run install:all && $(npm bin)/lerna run build --stream"
+  },
+  "keywords": [
+    "node.js",
+    "react.js",
+    "redux.js",
+    "redis"
+  ],
+  "author": "Ovie Okeh",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "lerna": "^3.14.1"
+  }
+}
