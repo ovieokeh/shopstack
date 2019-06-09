@@ -3,18 +3,18 @@ import runQuery from '..';
 class CustomerModel {
   static async getByID(id) {
     const customerDB = await runQuery(`CALL customer_get_customer(?)`, [id]);
-    return { ...customerDB[0] };
+    return { ...customerDB[0][0] };
   }
 
   static async getByEmail(email) {
     const customer = await runQuery('SELECT * FROM customer WHERE email = ?', [email]);
-    return customer;
+    return customer[0];
   }
 
   static async create(details) {
     const { name, email, password } = details;
     const results = await runQuery(`CALL customer_add(?, ?, ?)`, [name, email, password]);
-    const customerId = results[0]['LAST_INSERT_ID()'];
+    const customerId = results[0][0]['LAST_INSERT_ID()'];
 
     const customer = await this.getByID(customerId);
     return customer;

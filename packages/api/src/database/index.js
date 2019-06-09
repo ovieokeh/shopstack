@@ -10,7 +10,7 @@ const DB = {};
 
 async function runQuery(query, params) {
   const [rows] = await DB.connection.execute(query, params);
-  return rows[0];
+  return rows;
 }
 
 export default runQuery;

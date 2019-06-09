@@ -5,6 +5,7 @@ import attributeRoutes from './attributeRoutes';
 import categoryRoutes from './categoryRoutes';
 import departmentRoutes from './departmentRoutes';
 import shippingRoutes from './shippingRoutes';
+import taxRoutes from './taxRoutes';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.use(attributeRoutes);
 router.use(categoryRoutes);
 router.use(departmentRoutes);
 router.use(shippingRoutes);
+router.use(taxRoutes);
 
 router.use('*', (_, res) => {
   res.status(200).json({
