@@ -7,6 +7,7 @@ import departmentRoutes from './departmentRoutes';
 import shippingRoutes from './shippingRoutes';
 import taxRoutes from './taxRoutes';
 import cartRoutes from './cartRoutes';
+import productRoutes from './productRoutes';
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.use(departmentRoutes);
 router.use(shippingRoutes);
 router.use(taxRoutes);
 router.use(cartRoutes);
+router.use(productRoutes);
 
 router.use('*', (_, res) => {
   res.status(200).json({

@@ -10,7 +10,6 @@ BEGIN
                         '...')) AS description,
               price, discounted_price, thumbnail
      FROM     product
-     WHERE    display = 1 OR display = 3
      ORDER BY display DESC
      LIMIT    ?, ?";
 

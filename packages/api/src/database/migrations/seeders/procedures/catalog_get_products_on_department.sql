@@ -14,9 +14,8 @@ BEGIN
                        ON p.product_id = pc.product_id
      INNER JOIN      category c
                        ON pc.category_id = c.category_id
-     WHERE           (p.display = 2 OR p.display = 3)
-                     AND c.department_id = ?
-     ORDER BY        p.display DESC
+     WHERE           c.department_id = ?
+     ORDER BY        p.product_id DESC
      LIMIT           ?, ?";
 
   SET @p1 = inShortProductDescriptionLength;

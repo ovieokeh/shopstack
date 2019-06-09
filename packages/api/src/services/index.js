@@ -5,6 +5,7 @@ import DepartmentService from './departmentService';
 import ShippingService from './shippingService';
 import TaxService from './taxService';
 import CartService from './cartService';
+import ProductService from './productService';
 
 export {
   CustomerService,
@@ -14,4 +15,5 @@ export {
   ShippingService,
   TaxService,
   CartService,
+  ProductService,
 };

@@ -1,6 +1,5 @@
 CREATE PROCEDURE catalog_count_products_on_catalog()
 BEGIN
   SELECT COUNT(*) AS products_on_catalog_count
-  FROM   product
-  WHERE  display = 1 OR display = 3;
+  FROM   product;
 END
