@@ -6,6 +6,7 @@ import ShippingModel from './shippingModel';
 import TaxModel from './taxModel';
 import CartModel from './cartModel';
 import ProductModel from './productModel';
+import OrderModel from './orderModel';
 
 export {
   CustomerModel,
@@ -16,4 +17,5 @@ export {
   TaxModel,
   CartModel,
   ProductModel,
+  OrderModel,
 };

@@ -8,6 +8,7 @@ import shippingRoutes from './shippingRoutes';
 import taxRoutes from './taxRoutes';
 import cartRoutes from './cartRoutes';
 import productRoutes from './productRoutes';
+import orderRoutes from './orderRoutes';
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.use(shippingRoutes);
 router.use(taxRoutes);
 router.use(cartRoutes);
 router.use(productRoutes);
+router.use(orderRoutes);
 
 router.use('*', (_, res) => {
   res.status(200).json({

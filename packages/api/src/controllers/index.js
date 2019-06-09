@@ -7,6 +7,7 @@ import ShippingController from './shippingController';
 import TaxController from './taxController';
 import CartController from './cartController';
 import ProductController from './productController';
+import OrderController from './orderController';
 
 export {
   CustomerController,
@@ -18,4 +19,5 @@ export {
   TaxController,
   CartController,
   ProductController,
+  OrderController,
 };
