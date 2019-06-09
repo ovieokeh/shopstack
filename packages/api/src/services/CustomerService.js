@@ -27,6 +27,23 @@ class CustomerService {
 
     return { customer, token };
   }
+
+  /**
+   * Logs in a customer and returns the customer's details and access token
+   * @param {String} password
+   * @param {Object} customer
+   * @returns {Object} an object containing the customer's details and their token.
+   * @static
+   */
+  static async login(password, customer) {
+    const isPasswordMatch = auth.verifyPassword(password, customer.password);
+    if (!isPasswordMatch) return;
+
+    const token = `Bearer ${auth.generateToken(customer)}`;
+    delete customer.password;
+
+    return { customer, token };
+  }
 }
 
 export default CustomerService;
