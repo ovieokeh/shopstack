@@ -1,4 +1,4 @@
-import runQuery from '../../database';
+import { CustomerModel } from '../../database/models';
 import { validate, auth, respond } from '../../utilities';
 
 /**
@@ -26,7 +26,7 @@ class CustomerValidations {
 
     const { email, password } = request.body;
 
-    const customer = await runQuery('SELECT name FROM customer WHERE email = ?', [email]);
+    const customer = await CustomerModel.getByEmail(email);
     if (customer) {
       respond(response, 'error', 409, 'this email address is already in use');
       return;
@@ -54,7 +54,7 @@ class CustomerValidations {
     }
 
     const { email } = request.body;
-    const customer = await runQuery('SELECT * FROM customer WHERE email = ?', [email]);
+    const customer = await CustomerModel.getByEmail(email);
     if (!customer) {
       respond(response, 'error', 401, 'invalid login credentials');
       return;

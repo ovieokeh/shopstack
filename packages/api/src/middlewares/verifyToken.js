@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { respond, Queries } from '../utilities';
+import { CustomerModel } from '../database/models';
+import { respond } from '../utilities';
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ const verifyToken = async (request, response, next) => {
       return;
     }
 
-    const customer = await Queries.findCustomerById(decoded.customer_id);
+    const customer = await CustomerModel.getByID(decoded.customer_id);
 
     if (!customer) {
       respond(response, 'error', 401, 'unable to verify token');

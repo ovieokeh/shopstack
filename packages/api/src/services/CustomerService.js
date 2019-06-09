@@ -1,5 +1,5 @@
-import runQuery from '../database';
-import { auth, Queries } from '../utilities';
+import { CustomerModel } from '../database/models';
+import { auth } from '../utilities';
 
 /**
  * This class contains all customer related actions.
@@ -14,16 +14,10 @@ class CustomerService {
    * @static
    */
   static async create(customerDetails) {
-    const { name, email, password } = customerDetails;
-
-    const results = await runQuery(`CALL customer_add(?, ?, ?)`, [name, email, password]);
-    const customerId = results[0]['LAST_INSERT_ID()'];
-
-    const customer = await Queries.findCustomerById(customerId);
-
+    const customer = await CustomerModel.create(customerDetails);
     delete customer.password;
-    const token = `Bearer ${auth.generateToken(customer)}`;
 
+    const token = `Bearer ${auth.generateToken(customer)}`;
     return { customer, token };
   }
 
@@ -52,26 +46,59 @@ class CustomerService {
    * @returns {Object} an object containing the updated details
    * @static
    */
-  static async update(newDetails, customer) {
-    const { name, email } = newDetails;
-    const password = newDetails.password || customer.password;
-    const dayPhone = newDetails.dayPhone || customer.day_phone;
-    const evePhone = newDetails.evePhone || customer.eve_phone;
-    const mobPhone = newDetails.mobPhone || customer.mob_phone;
-
-    await runQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', [
-      customer.customer_id,
+  static async update(type, newDetails, customer) {
+    const {
       name,
       email,
-      password,
-      dayPhone,
-      evePhone,
-      mobPhone,
-    ]);
+      password = customer.password,
+      dayPhone = customer.day_phone,
+      evePhone = customer.eve_phone,
+      mobPhone = customer.mob_phone,
+      creditCard = customer.credit_card,
+      address1 = customer.address_1,
+      address2 = customer.address_2,
+      city = customer.city,
+      region = customer.region,
+      postalCode = customer.postal_code,
+      country = customer.country,
+      shippingRegionId = customer.shipping_region_id,
+    } = newDetails;
+    let updatedCustomer;
 
-    const updatedCustomer = await Queries.findCustomerById(customer.customer_id);
+    switch (type) {
+      case 'creditCard':
+        updatedCustomer = await CustomerModel.updateCreditCard({
+          id: customer.customer_id,
+          creditCard,
+        });
+        break;
+
+      case 'address':
+        updatedCustomer = await CustomerModel.updateAddress({
+          id: customer.customer_id,
+          address1,
+          address2,
+          city,
+          region,
+          postalCode,
+          country,
+          shippingRegionId,
+        });
+        break;
+
+      default:
+        updatedCustomer = await CustomerModel.updateAccount({
+          id: customer.customer_id,
+          name,
+          email,
+          password,
+          dayPhone,
+          evePhone,
+          mobPhone,
+        });
+    }
+
     delete updatedCustomer.password;
-
     return updatedCustomer;
   }
 }
