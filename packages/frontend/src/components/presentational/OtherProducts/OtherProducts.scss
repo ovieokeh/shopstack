@@ -1,0 +1,26 @@
+@import '../../../../public/styles.scss';
+
+.other-products-container {
+  padding-bottom: 2rem;
+
+  h3 {
+    margin-top: 5rem;
+  }
+
+  .other-products {
+    display: flex;
+  }
+}
+
+@media screen and (max-width: $tablet-bp) {
+  .other-products-container {
+    h3 {
+      margin-bottom: 1rem;
+    }
+
+    .other-products {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}

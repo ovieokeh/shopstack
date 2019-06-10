@@ -1,0 +1,131 @@
+@import '../../../../public/styles.scss';
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 90vh;
+  margin: 1rem;
+
+  .divider {
+    width: 100%;
+    margin: 3rem 0;
+    border-color: $medium-grey;
+  }
+
+  .profile-details {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    width: 100%;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      padding: 0 1rem;
+
+      .detail-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #cacaca;
+
+        .secure-input {
+          -webkit-text-security: disc;
+        }
+
+        .region-select {
+          width: 100%;
+          margin: 0.5rem 0;
+        }
+
+        label {
+          text-transform: uppercase;
+          margin-right: 1rem;
+        }
+
+        input {
+          background-color: white;
+          padding: 0.5rem 1rem;
+          border: none;
+          font-size: 1rem;
+          outline: 0;
+          flex-grow: 1;
+        }
+      }
+
+      .input-error-message {
+        margin-bottom: 1rem;
+        display: block;
+        color: $error-red;
+      }
+
+      .btn-container {
+        display: flex;
+        align-items: center;
+      }
+      .submit-btn {
+        display: inline-flex;
+        width: 150px;
+        justify-content: space-between;
+
+        div {
+          height: 0;
+        }
+
+        span {
+          margin: 0 auto;
+        }
+      }
+
+      .cancel-btn {
+        border: 1px solid $error-red;
+        background-color: $error-red;
+        color: white;
+        margin: 0 0.5rem;
+        &:hover {
+          background-color: white;
+          color: $error-red;
+        }
+      }
+
+      .is-active {
+        border-bottom: 1px solid $active-green;
+      }
+    }
+  }
+
+  .orders-container {
+    align-items: center;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: $dark-grey;
+    border-left: 2px solid $light-grey;
+    padding: 1rem 0;
+  }
+}
+
+@media screen and (max-width: $tablet-bp) {
+  .profile-container {
+    .profile-details {
+      grid-template-columns: 1fr;
+      grid-row-gap: 1rem;
+
+      .content {
+        .detail-group {
+          width: 100%;
+
+          label,
+          input {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+
+    .orders-container {
+      margin-top: 1rem;
+      border-left: 0;
+      border-top: 2px solid $light-grey;
+    }
+  }
+}

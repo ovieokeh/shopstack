@@ -124,12 +124,8 @@ class CartService {
     const cart = await this.getAllProducts(cartId);
     if (!cart) return null;
 
-    const totalAmount =
-      cart.length === 1
-        ? Number(cart[0].subtotal)
-        : cart.reduce((prev, cur) => Number(prev.subtotal) + Number(cur.subtotal));
-
-    return { totalAmount: totalAmount.toFixed(2) };
+    const totalAmount = await CartModel.getTotal({ cartId });
+    return { totalAmount };
   }
 }
 

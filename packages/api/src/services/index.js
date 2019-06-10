@@ -7,6 +7,7 @@ import TaxService from './taxService';
 import CartService from './cartService';
 import ProductService from './productService';
 import OrderService from './orderService';
+import StripeService from './stripeService';
 
 export {
   CustomerService,
@@ -18,4 +19,5 @@ export {
   CartService,
   ProductService,
   OrderService,
+  StripeService,
 };

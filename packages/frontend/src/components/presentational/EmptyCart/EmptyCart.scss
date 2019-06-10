@@ -1,0 +1,28 @@
+@import '../../../../public/styles.scss';
+
+.no-items {
+  text-align: center;
+  font-size: 1.2rem;
+  color: $dark-grey;
+  align-self: center;
+
+  .start-shopping {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: white;
+    background-color: $active-green;
+    border: 1px solid $active-green;
+    text-decoration: none;
+    transition: background-color ease;
+    max-width: 200px;
+    margin: 0 auto;
+    &:hover {
+      background-color: white;
+      color: $active-green;
+    }
+  }
+
+  svg {
+    font-size: 150px;
+  }
+}

@@ -1,0 +1,61 @@
+@import '../../../../public/styles.scss';
+
+.orders-container {
+  .order {
+    font-size: 1rem;
+    width: 100%;
+    padding-left: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $medium-grey;
+    cursor: pointer;
+    transition: background-color 200ms;
+    &:hover {
+      background-color: $very-light-grey;
+    }
+    & > * {
+      pointer-events: none;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+    small {
+      text-transform: lowercase;
+    }
+  }
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+
+  .order-summary {
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 0.5rem;
+    }
+  }
+
+  .order-items {
+    background-color: $very-light-grey;
+    padding: 1rem;
+    margin-top: 1rem;
+
+    .item {
+      border-bottom: 1px solid $medium-grey;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
+
+      .item-details {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+}

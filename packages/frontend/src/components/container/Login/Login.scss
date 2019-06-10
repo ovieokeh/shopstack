@@ -1,0 +1,9 @@
+@import '../../../../public/styles.scss';
+
+.remember-container {
+  display: flex;
+  align-self: flex-start;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}

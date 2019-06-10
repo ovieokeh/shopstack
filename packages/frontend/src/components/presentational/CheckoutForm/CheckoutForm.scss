@@ -1,0 +1,93 @@
+@import '../../../../public/styles.scss';
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  background-color: $very-light-grey;
+
+  .cancel-payment {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background-color: $error-red;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 200ms;
+    &:hover {
+      background-color: white;
+      color: $error-red;
+    }
+  }
+
+  form {
+    min-width: 300px;
+    border: 1px solid #cacaca;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: white;
+  }
+
+  label {
+    min-width: 500px;
+    color: #6b7c93;
+    font-weight: 300;
+    letter-spacing: 0.025em;
+  }
+
+  input,
+  .StripeElement {
+    display: block;
+    margin: 10px 0 20px 0;
+    padding: 10px 14px;
+    font-size: 1em;
+    font-family: 'Source Code Pro', monospace;
+    box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
+    border: 0;
+    outline: 0;
+    border-radius: 4px;
+    background: white;
+
+    &::placeholder {
+      color: #aab7c4;
+    }
+
+    &:focus,
+    .StripeElement--focus {
+      box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px, rgba(0, 0, 0, 0.0784314) 0px 1px 3px;
+      -webkit-transition: all 150ms ease;
+      transition: all 150ms ease;
+    }
+  }
+
+  .order-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    text-decoration: none;
+    margin-top: 5%;
+    background-color: #008cdd;
+    border: 1px solid #008cdd;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    padding: 1rem;
+    width: 200px;
+    transition: opacity 200ms;
+    &:hover {
+      opacity: 0.8;
+    }
+    &:disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+
+    svg {
+      margin-left: 0.5rem;
+    }
+  }
+}

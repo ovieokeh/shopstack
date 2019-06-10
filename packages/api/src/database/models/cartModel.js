@@ -31,7 +31,7 @@ class CartModel {
 
   static async getTotal({ cartId }) {
     const total = await runQuery('CALL shopping_cart_get_total_amount(?)', [cartId]);
-    return total;
+    return total[0][0].total_amount;
   }
 
   static async emptyCart({ cartId }) {
