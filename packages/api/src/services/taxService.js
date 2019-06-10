@@ -6,13 +6,16 @@ import { TaxModel } from '../database/models';
  * @class
  */
 class TaxService {
+  constructor() {
+    this.TaxModel = new TaxModel();
+  }
+
   /**
    * retrieves all taxes
    * @returns {Array} a list of all the taxes
-   * @static
    */
-  static async getAll() {
-    const taxes = await TaxModel.getAll();
+  async getAll() {
+    const taxes = await this.TaxModel.getAll();
     return taxes;
   }
 
@@ -20,10 +23,9 @@ class TaxService {
    * get's a single tax by it's ID
    * @param {Number} id
    * @returns {(Object|null)} the tax or null if not found
-   * @static
    */
-  static async get(id) {
-    const tax = await TaxModel.getByID(id);
+  async get(id) {
+    const tax = await this.TaxModel.getByID(id);
     return tax;
   }
 }

@@ -6,15 +6,20 @@ import { respond } from '../utilities';
  * @class
  */
 class DepartmentController {
+  constructor() {
+    this.DepartmentService = new DepartmentService();
+    this.getAll = this.getAll.bind(this);
+    this.getOne = this.getOne.bind(this);
+  }
+
   /**
    * Handles the GET /departments endpoint
    * @param {Object} _
    * @param {Object} response
-   * @static
    */
-  static async getAll(_, response) {
+  async getAll(_, response) {
     try {
-      const departments = await DepartmentService.getAll();
+      const departments = await this.DepartmentService.getAll();
       respond(response, 'success', 200, 'departments retrieved successfully', departments);
     } catch (error) {
       respond(response, 'error', 500, 'an error occurred', error.message);
@@ -25,12 +30,11 @@ class DepartmentController {
    * Handles the GET /departments/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getOne(request, response) {
+  async getOne(request, response) {
     try {
       const departmentId = request.params.id;
-      const department = await DepartmentService.get(departmentId);
+      const department = await this.DepartmentService.get(departmentId);
 
       if (!department) {
         respond(response, 'error', 404, 'department not found');

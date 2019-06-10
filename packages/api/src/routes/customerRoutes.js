@@ -3,13 +3,13 @@ import { CustomerController } from '../controllers';
 import { customer, verifyToken } from '../middlewares';
 
 const router = express.Router();
-const { register, login, update, getProfile } = CustomerController;
+const CC = new CustomerController();
 
-router.post('/customers', customer.register, register);
-router.post('/customers/login', customer.login, login);
-router.put('/customers', verifyToken, customer.update, update);
-router.put('/customers/creditCard', verifyToken, customer.update, update);
-router.put('/customers/address', verifyToken, customer.update, update);
-router.get('/customer', verifyToken, getProfile);
+router.post('/customers', customer.register, CC.register);
+router.post('/customers/login', customer.login, CustomerController.login);
+router.put('/customers', verifyToken, customer.update, CC.update);
+router.put('/customers/creditCard', verifyToken, customer.update, CC.update);
+router.put('/customers/address', verifyToken, customer.update, CC.update);
+router.get('/customer', verifyToken, CustomerController.getProfile);
 
 export default router;

@@ -6,6 +6,19 @@ import { respond } from '../utilities';
  * @class
  */
 class CartController {
+  constructor() {
+    this.CartService = new CartService();
+    this.addToCart = this.addToCart.bind(this);
+    this.getProductsInCart = this.getProductsInCart.bind(this);
+    this.updateProductQuantity = this.updateProductQuantity.bind(this);
+    this.clear = this.clear.bind(this);
+    this.saveForLater = this.saveForLater.bind(this);
+    this.getSavedItems = this.getSavedItems.bind(this);
+    this.moveToCart = this.moveToCart.bind(this);
+    this.removeFromCart = this.removeFromCart.bind(this);
+    this.getTotalAmount = this.getTotalAmount.bind(this);
+  }
+
   /**
    * Handles the GET /shoppingcart/generateUniqueId endpoint
    * @param {Object} _
@@ -25,12 +38,11 @@ class CartController {
    * Handles the POST /shoppingcart/add endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async addToCart(request, response) {
+  async addToCart(request, response) {
     try {
       const { cartId, productId, attributes, quantity } = request.body;
-      const productsInCart = await CartService.addToCart({
+      const productsInCart = await this.CartService.addToCart({
         cartId,
         productId,
         attributes,
@@ -52,13 +64,12 @@ class CartController {
    * Handles the GET /shoppingcart/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getProductsInCart(request, response) {
+  async getProductsInCart(request, response) {
     try {
       const cartId = request.params.id;
 
-      const products = await CartService.getAllProducts(cartId);
+      const products = await this.CartService.getAllProducts(cartId);
       if (!products) {
         respond(response, 'error', 404, 'cart not found');
         return;
@@ -74,14 +85,13 @@ class CartController {
    * Handles the PUT /shoppingcart/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async updateProductQuantity(request, response) {
+  async updateProductQuantity(request, response) {
     try {
       const itemId = request.params.id;
       const { quantity } = request.body;
 
-      const updatedItem = await CartService.updateItemQuantity(itemId, quantity);
+      const updatedItem = await this.CartService.updateItemQuantity(itemId, quantity);
 
       if (updatedItem === 'item404') {
         respond(response, 'error', 404, 'item not found');
@@ -98,12 +108,11 @@ class CartController {
    * Handles the DELETE /shoppingcart/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async clear(request, response) {
+  async clear(request, response) {
     try {
       const cartId = request.params.id;
-      const cart = await CartService.emptyCart(cartId);
+      const cart = await this.CartService.emptyCart(cartId);
 
       if (!cart) {
         respond(response, 'error', 404, 'cart not found');
@@ -120,12 +129,11 @@ class CartController {
    * Handles the GET /shoppingcart/saveForLater/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async saveForLater(request, response) {
+  async saveForLater(request, response) {
     try {
       const itemId = request.params.id;
-      const isSaved = await CartService.saveForLater(itemId);
+      const isSaved = await this.CartService.saveForLater(itemId);
 
       if (!isSaved) {
         respond(response, 'error', 404, 'item not found');
@@ -142,12 +150,11 @@ class CartController {
    * Handles the GET /shoppingcart/getSaved/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getSavedItems(request, response) {
+  async getSavedItems(request, response) {
     try {
       const cartId = request.params.id;
-      const items = await CartService.getSavedForLater(cartId);
+      const items = await this.CartService.getSavedForLater(cartId);
 
       if (!items.length) {
         respond(response, 'error', 404, `no saved items found for cart with ID ${cartId}`);
@@ -164,12 +171,11 @@ class CartController {
    * Handles the GET /shoppingcart/moveToCart/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async moveToCart(request, response) {
+  async moveToCart(request, response) {
     try {
       const itemId = request.params.id;
-      const isMoved = await CartService.moveToBuyNow(itemId);
+      const isMoved = await this.CartService.moveToBuyNow(itemId);
 
       if (!isMoved) {
         respond(response, 'error', 404, 'item not found');
@@ -187,10 +193,10 @@ class CartController {
    * @param {Object} request
    * @param {Object} response
    */
-  static async removeFromCart(request, response) {
+  async removeFromCart(request, response) {
     try {
       const itemId = request.params.id;
-      const isRemoved = await CartService.removeFromCart(itemId);
+      const isRemoved = await this.CartService.removeFromCart(itemId);
 
       if (!isRemoved) {
         respond(response, 'error', 404, 'item not found');
@@ -208,11 +214,11 @@ class CartController {
    * @param {Object} request
    * @param {Object} response
    */
-  static async getTotalAmount(request, response) {
+  async getTotalAmount(request, response) {
     try {
       const cartId = request.params.id;
 
-      const result = await CartService.getTotalAmount(cartId);
+      const result = await this.CartService.getTotalAmount(cartId);
       if (!result) {
         respond(response, 'error', 404, 'cart not found');
         return;

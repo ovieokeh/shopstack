@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
+require('dotenv').config();
 
 const connectionConfig = {};
 
@@ -11,6 +9,7 @@ switch (process.env.NODE_ENV) {
     connectionConfig.password = process.env.DB_CONNECTION_PASSWORD_TEST;
     connectionConfig.database = process.env.DB_CONNECTION_NAME_TEST;
     connectionConfig.multipleStatements = true;
+    connectionConfig.waitForConnections = true;
     break;
 
   default:
@@ -19,6 +18,7 @@ switch (process.env.NODE_ENV) {
     connectionConfig.password = process.env.DB_CONNECTION_PASSWORD;
     connectionConfig.database = process.env.DB_CONNECTION_NAME;
     connectionConfig.multipleStatements = true;
+    connectionConfig.waitForConnections = true;
 }
 
-export default connectionConfig;
+module.exports = connectionConfig;

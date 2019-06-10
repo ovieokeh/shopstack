@@ -6,13 +6,16 @@ import { CategoryModel } from '../database/models';
  * @class
  */
 class CategoryService {
+  constructor() {
+    this.CategoryModel = new CategoryModel();
+  }
+
   /**
    * retrieves all categories
    * @returns {Array} a list of all the categories
-   * @static
    */
-  static async getAll() {
-    const categories = await CategoryModel.getAll();
+  async getAll() {
+    const categories = await this.CategoryModel.getAll();
     return categories;
   }
 
@@ -20,10 +23,9 @@ class CategoryService {
    * retrieves a single category by ID
    * @param {id} number
    * @returns {(Object|null)} the category or null if not found
-   * @static
    */
-  static async get(id) {
-    const category = await CategoryModel.getByID(id);
+  async get(id) {
+    const category = await this.CategoryModel.getByID(id);
     return category[0];
   }
 
@@ -31,10 +33,9 @@ class CategoryService {
    * retrieves the categories of a department
    * @param {id} number
    * @returns {(Array|null)} the list of categories or null if not found
-   * @static
    */
-  static async getDepartmentCategories(id) {
-    const categories = await CategoryModel.getDepartmentCategories(id);
+  async getDepartmentCategories(id) {
+    const categories = await this.CategoryModel.getDepartmentCategories(id);
     return categories;
   }
 
@@ -42,10 +43,9 @@ class CategoryService {
    * retrieves the categories of a product
    * @param {id} number
    * @returns {Array} the list of categories
-   * @static
    */
-  static async getProductCategories(id) {
-    const categories = await CategoryModel.getProductcategories(id);
+  async getProductCategories(id) {
+    const categories = await this.CategoryModel.getProductcategories(id);
     if (!categories) return [];
     return categories;
   }

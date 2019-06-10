@@ -4,9 +4,9 @@ import { validateId } from '../middlewares';
 import redisMiddleware from '../redis';
 
 const router = express.Router();
-const { getAll, getOne } = TaxController;
+const TC = new TaxController();
 
-router.get('/tax', redisMiddleware, getAll);
-router.get('/tax/:id', validateId('tax'), redisMiddleware, getOne);
+router.get('/tax', redisMiddleware, TC.getAll);
+router.get('/tax/:id', validateId('tax'), redisMiddleware, TC.getOne);
 
 export default router;

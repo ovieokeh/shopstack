@@ -1,16 +1,21 @@
-import mysql from 'mysql2/promise';
-import config from './config';
+import mysql from 'mysql2';
+import configuration from './config';
 
-const DB = {};
+class Database {
+  constructor(config) {
+    this.connection = mysql.createPool(config);
+    this.query = this.query.bind(this);
+    this.close = this.close.bind(this);
+  }
 
-// create the connection to database
-(async function createConnection() {
-  DB.connection = await mysql.createConnection(config);
-})();
+  async query(sql, args) {
+    const [rows] = await this.connection.promise().query(sql, args);
+    return rows;
+  }
 
-async function runQuery(query, params) {
-  const [rows] = await DB.connection.execute(query, params);
-  return rows;
+  async close() {
+    await this.connection.promise().end(err => console.log('an error occurred:', err));
+  }
 }
 
-export default runQuery;
+module.exports = new Database(configuration);

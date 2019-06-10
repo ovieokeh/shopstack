@@ -6,22 +6,25 @@ import { ProductModel } from '../database/models';
  * @class
  */
 class ProductService {
+  constructor() {
+    this.ProductModel = new ProductModel();
+  }
+
   /**
    * retrieves all products
    * @param {Object} params filtering options
    * @returns {Array} a list of all the products
-   * @static
    */
-  static async getAll(params) {
+  async getAll(params) {
     const { limit, page, descriptionLength } = params;
     const offset = page === 1 ? 0 : page * limit - limit;
 
-    const products = await ProductModel.getAll({
+    const products = await this.ProductModel.getAll({
       descriptionLength,
       productsPerPage: limit,
       startIndex: offset,
     });
-    const productCount = await ProductModel.countAllProducts();
+    const productCount = await this.ProductModel.countAllProducts();
 
     return { products, productCount };
   }
@@ -30,12 +33,11 @@ class ProductService {
    * retrieves a single product by ID
    * @param {productId} number
    * @returns {(Object|null)} the product or null if not found
-   * @static
    */
-  static async get(productId) {
-    const product = await ProductModel.getByID({ productId });
+  async get(productId) {
+    const product = await this.ProductModel.getByID({ productId });
     if (!product) return null;
-    product.attributes = await ProductModel.getProductAttributes({ productId });
+    product.attributes = await this.ProductModel.getProductAttributes({ productId });
 
     return product;
   }
@@ -45,20 +47,19 @@ class ProductService {
    * conditions
    * @param {Object} params search parameters
    * @returns {Array} products that match the criteria
-   * @static
    */
-  static async search(params) {
+  async search(params) {
     const { allWords, queryString, limit, page, descriptionLength } = params;
     const offset = page === 1 ? 0 : page * limit - limit;
 
-    const results = await ProductModel.searchProduct({
+    const results = await this.ProductModel.searchProduct({
       searchString: queryString,
       isAllWords: allWords,
       descriptionLength,
       productsPerPage: limit,
       startIndex: offset,
     });
-    const resultCount = await ProductModel.countSearchResults({
+    const resultCount = await this.ProductModel.countSearchResults({
       searchString: queryString,
       isAllWords: allWords,
     });
@@ -70,13 +71,12 @@ class ProductService {
    * get's all products belonging to a single category
    * @param {Object} params search & filtering parameters
    * @returns {Array} products under the category
-   * @static
    */
-  static async getFromCategory(params) {
+  async getFromCategory(params) {
     const { categoryId, limit, page, descriptionLength } = params;
     const offset = page === 1 ? 0 : page * limit - limit;
 
-    const products = await ProductModel.getFromCategory({
+    const products = await this.ProductModel.getFromCategory({
       categoryId,
       descriptionLength,
       productsPerPage: limit,
@@ -84,7 +84,7 @@ class ProductService {
     });
     if (!products) return null;
 
-    const productCount = await ProductModel.countProductsInCategory({ categoryId });
+    const productCount = await this.ProductModel.countProductsInCategory({ categoryId });
 
     return { products, productCount };
   }
@@ -93,13 +93,12 @@ class ProductService {
    * get's all products belonging to a single department
    * @param {Object} params search & filtering parameters
    * @returns {Array} products under the department
-   * @static
    */
-  static async getFromDepartment(params) {
+  async getFromDepartment(params) {
     const { departmentId, limit, page, descriptionLength } = params;
     const offset = page === 1 ? 0 : page * limit - limit;
 
-    const products = await ProductModel.getFromDepartment({
+    const products = await this.ProductModel.getFromDepartment({
       departmentId,
       descriptionLength,
       productsPerPage: limit,
@@ -107,7 +106,7 @@ class ProductService {
     });
     if (!products) return null;
 
-    const productCount = await ProductModel.countProductsInDepartment({ departmentId });
+    const productCount = await this.ProductModel.countProductsInDepartment({ departmentId });
 
     return { products, productCount };
   }
@@ -116,10 +115,9 @@ class ProductService {
    * get the locations (department & category) of a product
    * @param {Number} productId
    * @returns {Object}
-   * @static
    */
-  static async getLocations(productId) {
-    const locations = await ProductModel.getProductLocations({ productId });
+  async getLocations(productId) {
+    const locations = await this.ProductModel.getProductLocations({ productId });
     if (!locations) return null;
     return locations;
   }
@@ -129,10 +127,9 @@ class ProductService {
    * @param {Number} customerId
    * @param {Number} productId
    * @param {Object} rating contains review(String) & rating(Number)
-   * @static
    */
-  static async addReview(customerId, productId, rating) {
-    const isReviewed = await ProductModel.addReview({
+  async addReview(customerId, productId, rating) {
+    const isReviewed = await this.ProductModel.addReview({
       customerId,
       productId,
       review: rating.review,
@@ -146,8 +143,8 @@ class ProductService {
    * retrieves all reviews of a product
    * @param {Number} productId
    */
-  static async getReviews(productId) {
-    const reviews = await ProductModel.getProductReviews({ productId });
+  async getReviews(productId) {
+    const reviews = await this.ProductModel.getProductReviews({ productId });
     return reviews;
   }
 }

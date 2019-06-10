@@ -6,17 +6,28 @@ import { respond } from '../utilities';
  * @class
  */
 class ProductController {
+  constructor() {
+    this.ProductService = new ProductService();
+    this.getAll = this.getAll.bind(this);
+    this.getOne = this.getOne.bind(this);
+    this.search = this.search.bind(this);
+    this.getFromCategory = this.getFromCategory.bind(this);
+    this.getFromDepartment = this.getFromDepartment.bind(this);
+    this.getLocations = this.getLocations.bind(this);
+    this.postReview = this.postReview.bind(this);
+    this.getReviews = this.getReviews.bind(this);
+  }
+
   /**
    * Handles the GET /products endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getAll(request, response) {
+  async getAll(request, response) {
     try {
       const { page, limit, descriptionLength } = request.query;
 
-      const productResults = await ProductService.getAll({
+      const productResults = await this.ProductService.getAll({
         page: +page || 1,
         limit: +limit || 20,
         descriptionLength: +descriptionLength || 200,
@@ -39,12 +50,11 @@ class ProductController {
    * Handles the GET /products/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getOne(request, response) {
+  async getOne(request, response) {
     try {
       const productId = request.params.id;
-      const product = await ProductService.get(productId);
+      const product = await this.ProductService.get(productId);
 
       if (!product) {
         respond(response, 'error', 404, 'product not found');
@@ -61,14 +71,14 @@ class ProductController {
    * Handles the GET /products/search endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
+   * @
    */
-  static async search(request, response) {
+  async search(request, response) {
     try {
       const { queryString, allWords, page, limit, descriptionLength } = request.query;
       const parsedQuery = queryString.replace(/ /g, '%');
 
-      const searchResults = await ProductService.search({
+      const searchResults = await this.ProductService.search({
         queryString: parsedQuery.toLowerCase(),
         allWords: allWords === 'true' ? 1 : false,
         page: +page || 1,
@@ -98,14 +108,13 @@ class ProductController {
    * Handles the GET /products/inCategory/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getFromCategory(request, response) {
+  async getFromCategory(request, response) {
     try {
       const categoryId = request.params.id;
       const { page, limit, descriptionLength } = request.query;
 
-      const productResults = await ProductService.getFromCategory({
+      const productResults = await this.ProductService.getFromCategory({
         categoryId,
         page: +page || 1,
         limit: +limit || 20,
@@ -134,14 +143,14 @@ class ProductController {
    * Handles the GET /products/inDepartment/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
+   * @
    */
-  static async getFromDepartment(request, response) {
+  async getFromDepartment(request, response) {
     try {
       const departmentId = request.params.id;
       const { page, limit, descriptionLength } = request.query;
 
-      const productResults = await ProductService.getFromDepartment({
+      const productResults = await this.ProductService.getFromDepartment({
         departmentId,
         page: +page || 1,
         limit: +limit || 20,
@@ -170,12 +179,11 @@ class ProductController {
    * Handles the GET /products/:id/locations endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getLocations(request, response) {
+  async getLocations(request, response) {
     try {
       const productId = request.params.id;
-      const locations = await ProductService.getLocations(productId);
+      const locations = await this.ProductService.getLocations(productId);
 
       if (!locations) {
         respond(
@@ -197,15 +205,14 @@ class ProductController {
    * Handles the POST /products/:id/reviews endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async postReview(request, response) {
+  async postReview(request, response) {
     try {
       const { customer } = request;
       const productId = request.params.id;
       const { review, rating } = request.body;
 
-      const postedReview = await ProductService.addReview(customer.customer_id, productId, {
+      const postedReview = await this.ProductService.addReview(customer.customer_id, productId, {
         review,
         rating,
       });
@@ -226,11 +233,11 @@ class ProductController {
    * @param {Object} request
    * @param {Object} response
    */
-  static async getReviews(request, response) {
+  async getReviews(request, response) {
     try {
       const productId = request.params.id;
 
-      const reviews = await ProductService.getReviews(productId);
+      const reviews = await this.ProductService.getReviews(productId);
 
       if (!reviews) {
         respond(response, 'error', 404, 'product not found');

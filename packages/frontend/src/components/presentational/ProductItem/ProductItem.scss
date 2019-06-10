@@ -1,0 +1,47 @@
+@import '../../../../public/styles.scss';
+
+.product-item {
+  width: 300px;
+  max-height: 400px;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  color: black;
+  margin: 1rem;
+  transition: filter 200ms ease;
+  &:hover {
+    filter: grayscale(100%);
+  }
+
+  img {
+    width: 300px;
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  p {
+    &:last-child {
+      font-weight: bold;
+    }
+  }
+
+  .product-price {
+    font-weight: bold;
+
+    .discounted {
+      text-decoration: line-through;
+      color: $medium-grey;
+    }
+  }
+}
+
+@media screen and (max-width: $tablet-bp) {
+  .product-item {
+    height: 300px;
+
+    img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+}

@@ -13,6 +13,7 @@ class CustomerValidations {
    * @param {Function} next
    */
   static async register(request, response, next) {
+    const CM = new CustomerModel();
     validate.name(request);
     validate.email(request);
     validate.password(request);
@@ -26,7 +27,7 @@ class CustomerValidations {
 
     const { email, password } = request.body;
 
-    const customer = await CustomerModel.getByEmail(email);
+    const customer = await CM.getByEmail(email);
     if (customer) {
       respond(response, 'error', 409, 'this email address is already in use');
       return;
@@ -43,6 +44,7 @@ class CustomerValidations {
    * @param {Function} next
    */
   static async login(request, response, next) {
+    const CM = new CustomerModel();
     validate.email(request);
     validate.loginPassword(request);
 
@@ -54,7 +56,7 @@ class CustomerValidations {
     }
 
     const { email } = request.body;
-    const customer = await CustomerModel.getByEmail(email);
+    const customer = await CM.getByEmail(email);
     if (!customer) {
       respond(response, 'error', 401, 'invalid login credentials');
       return;

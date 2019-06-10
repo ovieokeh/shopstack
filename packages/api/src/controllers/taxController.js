@@ -6,15 +6,20 @@ import { respond } from '../utilities';
  * @class
  */
 class TaxController {
+  constructor() {
+    this.TaxService = new TaxService();
+    this.getAll = this.getAll.bind(this);
+    this.getOne = this.getOne.bind(this);
+  }
+
   /**
    * Handles the GET /tax endpoint
    * @param {Object} _
    * @param {Object} response
-   * @static
    */
-  static async getAll(_, response) {
+  async getAll(_, response) {
     try {
-      const taxes = await TaxService.getAll();
+      const taxes = await this.TaxService.getAll();
       respond(response, 'success', 200, 'taxes retrieved successfully', taxes);
     } catch (error) {
       respond(response, 'error', 500, 'an error occurred', error.message);
@@ -25,12 +30,11 @@ class TaxController {
    * Handles the GET /tax/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getOne(request, response) {
+  async getOne(request, response) {
     try {
       const taxId = request.params.id;
-      const tax = await TaxService.get(taxId);
+      const tax = await this.TaxService.get(taxId);
 
       if (!tax) {
         respond(response, 'error', 404, 'tax not found');

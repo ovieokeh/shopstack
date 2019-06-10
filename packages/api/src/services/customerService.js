@@ -7,14 +7,17 @@ import { auth } from '../utilities';
  * @class
  */
 class CustomerService {
+  constructor() {
+    this.CustomerModel = new CustomerModel();
+  }
+
   /**
    * creates and stores a new customer
    * @param {Object} customerDetails
    * @returns {Object} an object containing the new customer and their token.
-   * @static
    */
-  static async create(customerDetails) {
-    const customer = await CustomerModel.create(customerDetails);
+  async create(customerDetails) {
+    const customer = await this.CustomerModel.create(customerDetails);
     delete customer.password;
 
     const token = `Bearer ${auth.generateToken(customer)}`;
@@ -44,9 +47,8 @@ class CustomerService {
    * @param {Object} newDetails
    * @param {Object} customer
    * @returns {Object} an object containing the updated details
-   * @static
    */
-  static async update(type, newDetails, customer) {
+  async update(type, newDetails, customer) {
     const {
       name,
       email,
@@ -67,14 +69,14 @@ class CustomerService {
 
     switch (type) {
       case 'creditCard':
-        updatedCustomer = await CustomerModel.updateCreditCard({
+        updatedCustomer = await this.CustomerModel.updateCreditCard({
           id: customer.customer_id,
           creditCard,
         });
         break;
 
       case 'address':
-        updatedCustomer = await CustomerModel.updateAddress({
+        updatedCustomer = await this.CustomerModel.updateAddress({
           id: customer.customer_id,
           address1,
           address2,
@@ -87,7 +89,7 @@ class CustomerService {
         break;
 
       default:
-        updatedCustomer = await CustomerModel.updateAccount({
+        updatedCustomer = await this.CustomerModel.updateAccount({
           id: customer.customer_id,
           name,
           email,

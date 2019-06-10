@@ -6,23 +6,25 @@ import { ShippingModel } from '../database/models';
  * @class
  */
 class ShippingService {
+  constructor() {
+    this.ShippingModel = new ShippingModel();
+  }
+
   /**
    * retrieves all shipping regions
    * @returns {Array} a list of all the shipping regions
-   * @static
    */
-  static async getAll() {
-    const shippings = await ShippingModel.getAll();
+  async getAll() {
+    const shippings = await this.ShippingModel.getAll();
     return shippings;
   }
 
   /**
    * retrieves a single shipping region's details
    * @returns {(Array|null)} the shipping region's details or null if not found
-   * @static
    */
-  static async getDetails(id) {
-    const details = await ShippingModel.getDetails(id);
+  async getDetails(id) {
+    const details = await this.ShippingModel.getDetails(id);
     if (!details) return [];
 
     return details;

@@ -6,16 +6,19 @@ import { OrderModel } from '../database/models';
  * @class
  */
 class OrderService {
+  constructor() {
+    this.OrderModel = new OrderModel();
+  }
+
   /**
    * creates a new order
    * @param {Object} details
    * @returns {String}
-   * @static
    */
-  static async postOrder(details) {
+  async postOrder(details) {
     const { customerId, cartId, shippingId, taxId } = details;
 
-    const orderId = await OrderModel.add({ cartId, customerId, shippingId, taxId });
+    const orderId = await this.OrderModel.add({ cartId, customerId, shippingId, taxId });
     if (!orderId) return null;
 
     return orderId;
@@ -25,8 +28,8 @@ class OrderService {
    * retrieves an order's information
    * @param {Number} orderId
    */
-  static async getOrderInfo(orderId) {
-    const info = await OrderModel.getInfo({ orderId });
+  async getOrderInfo(orderId) {
+    const info = await this.OrderModel.getInfo({ orderId });
     return info;
   }
 
@@ -35,8 +38,8 @@ class OrderService {
    * @param {Number} orderId
    * @returns {Object}
    */
-  static async getOrderDetails(orderId) {
-    const details = await OrderModel.getShortDetails({ orderId });
+  async getOrderDetails(orderId) {
+    const details = await this.OrderModel.getShortDetails({ orderId });
     return details;
   }
 
@@ -45,8 +48,8 @@ class OrderService {
    * @param {Number} customerId
    * @returns {Array}
    */
-  static async getCustomerOrders(customerId) {
-    const orders = await OrderModel.getCustomerOrders({ customerId });
+  async getCustomerOrders(customerId) {
+    const orders = await this.OrderModel.getCustomerOrders({ customerId });
     return orders;
   }
 }

@@ -1,5 +1,5 @@
-import mysql from 'mysql2/promise';
-import config from './config';
+const mysql = require('mysql2/promise');
+const config = require('./config');
 
 (async function revertMigrations() {
   const connection = await mysql.createConnection(config);

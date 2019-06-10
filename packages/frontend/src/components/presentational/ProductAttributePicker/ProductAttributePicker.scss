@@ -1,0 +1,19 @@
+@import '../../../../public/styles.scss';
+
+.attribute-picker-container {
+  display: flex;
+  justify-content: space-between;
+  width: 220px;
+
+  .picker-group {
+    small {
+      display: block;
+      color: $dark-grey;
+      margin-bottom: 0.5rem;
+    }
+
+    .attribute-picker {
+      min-width: 100px;
+    }
+  }
+}

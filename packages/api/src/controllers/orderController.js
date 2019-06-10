@@ -6,20 +6,27 @@ import { respond } from '../utilities';
  * @class
  */
 class OrderController {
+  constructor() {
+    this.OrderService = new OrderService();
+    this.postOrder = this.postOrder.bind(this);
+    this.getOrderInfo = this.getOrderInfo.bind(this);
+    this.getOrderDetails = this.getOrderDetails.bind(this);
+    this.getCustomerOrders = this.getCustomerOrders.bind(this);
+  }
+
   /**
    * Handles the POST /order endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async postOrder(request, response) {
+  async postOrder(request, response) {
     try {
       const {
         customer: { customer_id },
       } = request;
       const { cartId, shippingId, taxId } = request.body;
 
-      const order = await OrderService.postOrder({
+      const order = await this.OrderService.postOrder({
         customerId: customer_id,
         cartId,
         shippingId,
@@ -41,13 +48,12 @@ class OrderController {
    * Handles the GET /orders/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getOrderInfo(request, response) {
+  async getOrderInfo(request, response) {
     try {
       const orderId = request.params.id;
 
-      const orderInfo = await OrderService.getOrderInfo(orderId);
+      const orderInfo = await this.OrderService.getOrderInfo(orderId);
       if (!orderInfo) {
         respond(response, 'error', 404, 'order not found');
         return;
@@ -63,13 +69,12 @@ class OrderController {
    * Handles the GET /orders/shortDetail/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getOrderDetails(request, response) {
+  async getOrderDetails(request, response) {
     try {
       const orderId = request.params.id;
 
-      const orderDetails = await OrderService.getOrderDetails(orderId);
+      const orderDetails = await this.OrderService.getOrderDetails(orderId);
       if (!orderDetails) {
         respond(response, 'error', 404, 'order not found');
         return;
@@ -85,13 +90,12 @@ class OrderController {
    * Handles the GET /orders/inCustomer endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getCustomerOrders(request, response) {
+  async getCustomerOrders(request, response) {
     try {
       const { customer_id } = request.customer;
 
-      const orders = await OrderService.getCustomerOrders(customer_id);
+      const orders = await this.OrderService.getCustomerOrders(customer_id);
 
       respond(response, 'success', 200, 'customer orders retrieved successfully', orders);
     } catch (error) {

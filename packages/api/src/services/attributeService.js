@@ -6,13 +6,16 @@ import { AttributeModel } from '../database/models';
  * @class
  */
 class AttributeService {
+  constructor() {
+    this.AttributeModel = new AttributeModel();
+  }
+
   /**
    * retrieves all attributes
    * @returns {Array} a list of all the attributes
-   * @static
    */
-  static async getAll() {
-    const attributes = await AttributeModel.getAll();
+  async getAll() {
+    const attributes = await this.AttributeModel.getAll();
     return attributes;
   }
 
@@ -20,10 +23,9 @@ class AttributeService {
    * retrieves a single attribute by ID
    * @param {Number} id
    * @returns {(Object|null)} the attribute or null if not found
-   * @static
    */
-  static async get(id) {
-    const attribute = await AttributeModel.getByID(id);
+  async get(id) {
+    const attribute = await this.AttributeModel.getByID(id);
     return attribute[0];
   }
 
@@ -31,10 +33,9 @@ class AttributeService {
    * retrieves a single attribute's value by ID
    * @param {Number} id
    * @returns {(Array|null)} the value or null if not found
-   * @static
    */
-  static async getValues(id) {
-    const value = await AttributeModel.getValues(id);
+  async getValues(id) {
+    const value = await this.AttributeModel.getValues(id);
     return value;
   }
 
@@ -42,10 +43,9 @@ class AttributeService {
    * retrieves a product's attributes
    * @param {Number} id
    * @returns {(Array|null)} the attributes or null if not found
-   * @static
    */
-  static async getProductAttributes(id) {
-    const attributes = await AttributeModel.getProductAttributes(id);
+  async getProductAttributes(id) {
+    const attributes = await this.AttributeModel.getProductAttributes(id);
     if (!attributes) return [];
 
     return attributes;

@@ -6,15 +6,22 @@ import { respond } from '../utilities';
  * @class
  */
 class AttributeController {
+  constructor() {
+    this.AttributeService = new AttributeService();
+    this.getAll = this.getAll.bind(this);
+    this.getOne = this.getOne.bind(this);
+    this.getValues = this.getValues.bind(this);
+    this.getProductAttributes = this.getProductAttributes.bind(this);
+  }
+
   /**
    * Handles the GET /attributes endpoint
    * @param {Object} _
    * @param {Object} response
-   * @static
    */
-  static async getAll(_, response) {
+  async getAll(_, response) {
     try {
-      const attributes = await AttributeService.getAll();
+      const attributes = await this.AttributeService.getAll();
       respond(response, 'success', 200, 'attributes retrieved successfully', attributes);
     } catch (error) {
       respond(response, 'error', 500, 'an error occurred', error.message);
@@ -25,12 +32,11 @@ class AttributeController {
    * Handles the GET /attributes/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getOne(request, response) {
+  async getOne(request, response) {
     try {
       const attributeId = request.params.id;
-      const attribute = await AttributeService.get(attributeId);
+      const attribute = await this.AttributeService.get(attributeId);
 
       if (!attribute) {
         respond(response, 'error', 404, 'attribute not found');
@@ -47,12 +53,11 @@ class AttributeController {
    * Handles the GET /attributes/values/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async getValues(request, response) {
+  async getValues(request, response) {
     try {
       const attributeId = request.params.id;
-      const value = await AttributeService.getValues(attributeId);
+      const value = await this.AttributeService.getValues(attributeId);
 
       if (!value.length) {
         respond(response, 'error', 404, `value not found for attribute with ID ${attributeId}`);
@@ -69,12 +74,12 @@ class AttributeController {
    * Handles the GET /attributes/inProduct/:id endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
+   * @
    */
-  static async getProductAttributes(request, response) {
+  async getProductAttributes(request, response) {
     try {
       const productId = request.params.id;
-      const attributes = await AttributeService.getProductAttributes(productId);
+      const attributes = await this.AttributeService.getProductAttributes(productId);
 
       if (!attributes.length) {
         respond(response, 'error', 404, `attributes not found for product with ID ${productId}`);

@@ -6,17 +6,22 @@ import { respond } from '../utilities';
  * @class
  */
 class CustomerController {
+  constructor() {
+    this.CustomerService = new CustomerService();
+    this.register = this.register.bind(this);
+    this.update = this.update.bind(this);
+  }
+
   /**
    * Handles the POST /customers endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async register(request, response) {
+  async register(request, response) {
     try {
       const { name, email, password } = request.body;
       const customerDetails = { name, email, password };
-      const result = await CustomerService.create(customerDetails);
+      const result = await this.CustomerService.create(customerDetails);
 
       const resObject = {
         customer: result.customer,
@@ -34,7 +39,6 @@ class CustomerController {
    * Handles the POST /customers/login endpoint
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
   static async login(request, response) {
     const {
@@ -78,14 +82,17 @@ class CustomerController {
    * PUT /customers/creditCard,
    * @param {Object} request
    * @param {Object} response
-   * @static
    */
-  static async update(request, response) {
+  async update(request, response) {
     const { url } = request;
     const type = url.split('/')[2];
 
     try {
-      const updatedCustomer = await CustomerService.update(type, request.body, request.customer);
+      const updatedCustomer = await this.CustomerService.update(
+        type,
+        request.body,
+        request.customer,
+      );
 
       respond(response, 'success', 200, 'customer updated successfully', updatedCustomer);
     } catch (error) {

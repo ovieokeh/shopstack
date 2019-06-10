@@ -1,7 +1,7 @@
-import path from 'path';
-import fs from 'fs';
-import mysql from 'mysql2/promise';
-import config from './config';
+const path = require('path');
+const fs = require('fs');
+const mysql = require('mysql2/promise');
+const config = require('./config');
 
 const { log } = console;
 

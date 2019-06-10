@@ -13,6 +13,7 @@ dotenv.config();
  * @param {Function} next
  */
 const verifyToken = async (request, response, next) => {
+  const CM = new CustomerModel();
   const bearer = request.headers['user-key'];
   const privateKey = process.env.SECRET_KEY;
 
@@ -29,7 +30,7 @@ const verifyToken = async (request, response, next) => {
       return;
     }
 
-    const customer = await CustomerModel.getByID(decoded.customer_id);
+    const customer = await CM.getByID(decoded.customer_id);
 
     if (!customer) {
       respond(response, 'error', 401, 'unable to verify token');

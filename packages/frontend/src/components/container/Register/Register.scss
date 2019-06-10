@@ -1,0 +1,98 @@
+@import '../../../../public/styles.scss';
+
+.register-container,
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(100vw - 60%);
+
+    .input-row {
+      margin: 1rem 0;
+      width: 100%;
+
+      & > label,
+      input {
+        display: block;
+        margin: 0.5rem 0;
+      }
+
+      label {
+        text-transform: uppercase;
+        font-weight: bold;
+        color: $dark-grey;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        margin-bottom: 0;
+        border: 2px solid $medium-grey;
+        font-size: 1rem;
+        outline: 0;
+        &:focus {
+          box-shadow: 0 0 0 2pt $medium-grey;
+          border: 2px solid $medium-grey !important;
+        }
+      }
+
+      small {
+        opacity: 0.5;
+      }
+
+      .input-error {
+        border: 2px solid $error-red;
+      }
+
+      .input-error-message {
+        font-size: 0.8rem;
+        color: $error-red;
+      }
+    }
+
+    button {
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
+      border-style: none;
+      border: 1px solid black;
+      background-color: white;
+      font-size: 1rem;
+      transition: background-color 200ms ease, color 200ms ease;
+      cursor: pointer;
+      &:hover,
+      &:focus {
+        outline: 0;
+        background-color: black;
+        color: white;
+      }
+    }
+
+    small {
+      margin: 0.5rem 0;
+
+      a {
+        text-decoration: none;
+        color: $dark-grey;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $tablet-bp) {
+  .register-container,
+  .login-container {
+    .form {
+      width: calc(100vw - 30%);
+    }
+  }
+}

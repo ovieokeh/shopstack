@@ -1,0 +1,20 @@
+@import '../../../../public/styles.scss';
+
+.quantity-container {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+
+  span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 33px;
+    height: 33px;
+    background-color: white;
+    border: 1px solid $medium-grey;
+    font-size: 0.8rem;
+    text-align: center;
+    cursor: pointer;
+  }
+}

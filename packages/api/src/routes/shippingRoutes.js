@@ -4,9 +4,9 @@ import { validateId } from '../middlewares';
 import redisMiddleware from '../redis';
 
 const router = express.Router();
-const { getAll, getDetails } = ShippingController;
+const SC = new ShippingController();
 
-router.get('/shipping/regions', redisMiddleware, getAll);
-router.get('/shipping/regions/:id', validateId('shipping'), redisMiddleware, getDetails);
+router.get('/shipping/regions', redisMiddleware, SC.getAll);
+router.get('/shipping/regions/:id', validateId('shipping'), redisMiddleware, SC.getDetails);
 
 export default router;

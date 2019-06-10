@@ -1,0 +1,27 @@
+@import '../../../../public/styles.scss';
+
+.no-reviews-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90px;
+  margin: 1rem 0;
+  background-color: white;
+  color: $dark-grey;
+}
+
+.product-review {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: white;
+
+  .review-date {
+    display: block;
+    color: $dark-grey;
+    margin-bottom: 0.5rem;
+  }
+  .reviewer {
+    margin: 0;
+    margin-bottom: 0.5rem;
+  }
+}

@@ -1,0 +1,197 @@
+@import '../../../../public/styles.scss';
+
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .cta-btn {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    border-style: none;
+    border: 1px solid white;
+    text-decoration: none;
+    transition: background-color 200ms ease, color 200ms ease;
+
+    &:hover {
+      background-color: white;
+      color: black;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  .dark-btn {
+    color: black;
+    border: 1px solid black;
+    &:hover {
+      background-color: black;
+      color: white;
+    }
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    line-height: 25px;
+    padding: 0 2rem;
+    height: 600px;
+    width: 100%;
+    background-image: url('../../../assets/home-hero.jpg');
+    background-size: cover;
+    background-position: center;
+
+    p {
+      font-size: 1.2rem;
+    }
+  }
+
+  .ctas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    margin: 0.5rem 2rem;
+
+    .cta-div {
+      display: inline-flex;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      background-size: cover;
+      height: 400px;
+      padding: 1rem;
+    }
+
+    .christmas-cta {
+      background-image: url('../../../assets/christmas-cat-image.jpeg');
+    }
+
+    .valentine-cta {
+      background-image: url('../../../assets/valentine-cat-image.jpeg');
+    }
+
+    .france-cta {
+      background-image: url('../../../assets/france-cat-image.jpeg');
+    }
+
+    .italy-cta {
+      background-image: url('../../../assets/italy-cat-image.jpeg');
+    }
+  }
+
+  .latest-arrivals {
+    margin: 0 2rem;
+    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    overflow-x: scroll;
+  }
+
+  .shop-cta {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 5rem;
+    margin: 1rem 0;
+  }
+
+  .subscribe-container {
+    width: 400px;
+    margin: 0 auto;
+    border: 1px solid $medium-grey;
+
+    .subscribe-text {
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background-color: black;
+      color: white;
+      padding: 1rem;
+
+      .small {
+        display: block;
+        font-size: 0.5rem;
+        margin: 1rem 0;
+        text-transform: lowercase;
+        letter-spacing: 1px;
+      }
+    }
+
+    .subscribe-input-container {
+      margin: 1rem 0;
+      text-align: center;
+
+      input {
+        padding: 0.5rem 1rem;
+        border-radius: 10rem;
+        border-style: none;
+        border: 1px solid $medium-grey;
+        width: 250px;
+        margin: 0 0.5rem;
+        outline: 0;
+        &:focus {
+          box-shadow: 0 0 0 2pt $medium-grey;
+        }
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+        background-color: black;
+        color: white;
+        border-style: none;
+        border: 1px solid black;
+        border-radius: 50px;
+        transition: color 200ms ease, background-color 200ms ease;
+        cursor: pointer;
+        outline: 0;
+        &:hover {
+          background-color: white;
+          color: black;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $tablet-bp) {
+  .homepage-container {
+    .hero {
+      height: 600px;
+      width: 100%;
+      background-image: url('../../../assets/home-hero.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .ctas {
+      grid-template-columns: 1fr;
+    }
+
+    .subscribe-container {
+      width: 90vw;
+
+      .subscribe-input-container {
+        input {
+          width: 150px;
+        }
+
+        button {
+          margin: 0 0.5rem;
+        }
+      }
+    }
+  }
+}
