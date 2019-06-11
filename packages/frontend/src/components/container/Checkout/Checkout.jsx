@@ -1,14 +1,48 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { EmptyCart } from '../../presentational';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import RemoveCircle from '@material-ui/icons/RemoveCircle';
+import { removeProductFromCart, updateItemQuantity } from '../../../actions/cartActions';
+import { EmptyCart, QuantityUpdater } from '../../presentational';
 import './Checkout.scss';
 
-const Checkout = ({ cart, customer }) => {
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  dense: {
+    marginTop: 16,
+  },
+}));
+
+const Checkout = ({ cart, customer, updateQuantity, removeItem }) => {
   window.document.title = 'Checkout | Shop Stack';
 
   const { items } = cart;
   const customerDetails = customer || {};
+  const classes = useStyles();
+
+  const handleQuantityChange = (event, itemId, quantity) => {
+    const type = event.target.name;
+
+    if (quantity === 1 && type === 'minus') return;
+
+    if (type === 'minus') {
+      updateQuantity({ itemId, quantity: quantity - 1 });
+    } else {
+      updateQuantity({ itemId, quantity: quantity + 1 });
+    }
+  };
+
+  const handleRemoveItem = id => () => removeItem(id);
 
   const renderShippingDetails = () => {
     return (
@@ -21,61 +55,82 @@ const Checkout = ({ cart, customer }) => {
         )}
 
         <h3 className="ls-3 pd-10 uppercase center">Shipping Details</h3>
+        <form className={classes.container} noValidate autoComplete="off">
+          <TextField
+            id="filled-dense"
+            label="Name"
+            className={clsx(classes.textField, classes.dense)}
+            margin="dense"
+            variant="outlined"
+            defaultValue={customerDetails.name || ''}
+            fullWidth
+          />
 
-        <div className={`detail-group`}>
-          <label htmlFor="name">Name:</label>
-          <input name="name" defaultValue={customerDetails.name || ''} type="text" required />
-        </div>
+          <TextField
+            id="filled-dense"
+            label="Email"
+            className={clsx(classes.textField, classes.dense)}
+            margin="dense"
+            variant="outlined"
+            defaultValue={customerDetails.email || ''}
+            fullWidth
+          />
 
-        <div className={`detail-group`}>
-          <label htmlFor="email">Email:</label>
-          <input name="email" defaultValue={customerDetails.email || ''} type="text" required />
-        </div>
-
-        <div className={`detail-group`}>
-          <label htmlFor="dayPhone">Phone:</label>
-          <input
-            name="dayPhone"
+          <TextField
+            id="filled-dense"
+            label="Phone"
+            className={clsx(classes.textField, classes.dense)}
+            margin="dense"
+            variant="outlined"
             defaultValue={customerDetails.day_phone || ''}
-            type="text"
-            required
+            fullWidth
           />
-        </div>
 
-        <div className={`detail-group`}>
-          <label htmlFor="country">Country:</label>
-          <input name="country" defaultValue={customerDetails.country || ''} type="text" required />
-        </div>
+          <TextField
+            id="filled-dense"
+            label="Country"
+            className={clsx(classes.textField, classes.dense)}
+            margin="dense"
+            variant="outlined"
+            defaultValue={customerDetails.country || ''}
+            fullWidth
+          />
 
-        <div className={`detail-group`}>
-          <label htmlFor="city">City:</label>
-          <input name="city" defaultValue={customerDetails.city || ''} type="text" required />
-        </div>
+          <TextField
+            id="filled-dense"
+            label="City"
+            className={clsx(classes.textField, classes.dense)}
+            margin="dense"
+            variant="outlined"
+            defaultValue={customerDetails.city || ''}
+            fullWidth
+          />
 
-        <div className={`detail-group`}>
-          <label htmlFor="address">Address:</label>
-          <input
-            name="address"
+          <TextField
+            id="filled-dense"
+            label="Address"
+            className={clsx(classes.textField, classes.dense)}
+            margin="dense"
+            variant="outlined"
             defaultValue={customerDetails.address_1 || ''}
-            type="text"
-            required
+            fullWidth
           />
-        </div>
 
-        <div className={`detail-group`}>
-          <label htmlFor="postalCode">Postal Code:</label>
-          <input
-            name="postalCode"
+          <TextField
+            id="filled-dense"
+            label="Postal Code"
+            className={clsx(classes.textField, classes.dense)}
+            margin="dense"
+            variant="outlined"
             defaultValue={customerDetails.postal_code || ''}
-            type="text"
-            required
+            fullWidth
           />
-        </div>
 
-        <Link to="/pay" className="order-button">
-          Pay with Stripe
-          <i className="fab fa-stripe-s" />
-        </Link>
+          <button type="submit" className="order-button">
+            Pay with Stripe
+            <i className="fab fa-stripe-s" />
+          </button>
+        </form>
       </div>
     );
   };
@@ -84,20 +139,32 @@ const Checkout = ({ cart, customer }) => {
     return (
       <div className="order-details">
         <h3 className="ls-3 pd-10 uppercase center">Cart Summary</h3>
-        <div>
+        <div className="content">
           {items.map(product => {
             return (
               <div key={product.item_id} className="product">
-                <div className="product-details">
+                <div className="left">
                   <img
                     className="product-image"
                     src={`https://backendapi.turing.com/images/products/${product.thumbnail}`}
                     alt={product.name}
                   />
-                  <p>
-                    {product.quantity} x {product.name}
-                  </p>
-                  <p className="price">${product.price}</p>
+                  <p>{product.name}</p>
+                </div>
+                <div className="product-details">
+                  <div className="right">
+                    <QuantityUpdater
+                      quantity={product.quantity}
+                      updateQuantity={event =>
+                        handleQuantityChange(event, product.item_id, product.quantity)
+                      }
+                    />
+                    <p className="price">${product.subtotal}</p>
+                    <RemoveCircle
+                      className="clear-icon"
+                      onClick={handleRemoveItem(product.item_id)}
+                    />
+                  </div>
                 </div>
               </div>
             );
@@ -135,4 +202,12 @@ const mapStateToProps = state => ({
   customer: state.auth.customer,
 });
 
-export default connect(mapStateToProps)(Checkout);
+const mapDispatchToProps = dispatch => ({
+  removeItem: itemId => dispatch(removeProductFromCart(itemId)),
+  updateQuantity: details => dispatch(updateItemQuantity(details)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Checkout);

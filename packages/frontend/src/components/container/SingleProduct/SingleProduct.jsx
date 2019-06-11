@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Rating from 'react-rating';
+import ImageGallery from 'react-image-gallery';
 import { ArrowBackIos } from '@material-ui/icons';
 import {
   QuantityUpdater,
@@ -134,6 +135,17 @@ class SingleProduct extends Component {
 
     if (!product) return <div />;
 
+    const images = [
+      {
+        original: `https://backendapi.turing.com/images/products/${product.image}`,
+        thumbnail: `https://backendapi.turing.com/images/products/${product.image}`,
+      },
+      {
+        original: `https://backendapi.turing.com/images/products/${product.image_2}`,
+        thumbnail: `https://backendapi.turing.com/images/products/${product.image_2}`,
+      },
+    ];
+
     return (
       <div key={product.product_id} className="product">
         {showDialog && (
@@ -150,10 +162,11 @@ class SingleProduct extends Component {
             <span>Back to shop</span>
           </Link>
 
-          <img
-            alt={product.name}
-            src={`https://backendapi.turing.com/images/products/${product.image}`}
-            className="product-image"
+          <ImageGallery
+            items={images}
+            showNav={false}
+            showFullscreenButton={false}
+            showPlayButton={false}
           />
         </div>
         <div className="product-details">

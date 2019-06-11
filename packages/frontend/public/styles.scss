@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+
 $light-grey: #e9e9e9;
 $medium-grey: #cacaca;
 $dark-grey: #505050;
@@ -13,7 +15,7 @@ $tablet-bp: 768px;
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+  font-family: 'Muli', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
@@ -67,7 +69,7 @@ hr {
 
 button {
   border-style: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   border: 1px solid $medium-grey;
   font-size: 0.8rem;
   background-color: white;

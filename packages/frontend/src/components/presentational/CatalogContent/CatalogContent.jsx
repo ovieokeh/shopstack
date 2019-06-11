@@ -83,7 +83,7 @@ const CatalogContent = props => {
         />
         {isSearching && (
           <span className="clear-search" onClick={stopSearching}>
-            stop searching
+            reset
           </span>
         )}
       </div>

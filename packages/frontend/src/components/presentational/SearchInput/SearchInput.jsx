@@ -24,19 +24,21 @@ const SearchInput = props => {
   const classes = useStyles();
 
   return (
-    <Paper className={classes.root}>
-      <InputBase
-        className={classes.input}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        inputProps={{ 'aria-label': placeholder }}
-        fullWidth
-      />
-      <IconButton onClick={onSearchSubmit} className={classes.iconButton} aria-label="Search">
-        <SearchIcon />
-      </IconButton>
-    </Paper>
+    <form onSubmit={onSearchSubmit}>
+      <Paper className={classes.root}>
+        <InputBase
+          className={classes.input}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          inputProps={{ 'aria-label': placeholder }}
+          fullWidth
+        />
+        <IconButton onClick={onSearchSubmit} className={classes.iconButton} aria-label="Search">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+    </form>
   );
 };
 

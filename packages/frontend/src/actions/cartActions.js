@@ -30,6 +30,23 @@ export const addToCartAction = (productId, details) => async (dispatch, getState
   }
 };
 
+export const updateItemQuantity = ({ itemId, quantity }) => async (dispatch, getState) => {
+  const url = `${process.env.REACT_APP_API_URL}/shoppingcart/${itemId}`;
+  const { cart } = getState();
+
+  try {
+    const success = await Axios.put(url, { quantity });
+    const updatedCart = await getItemsInCart(cart.id);
+    const cartTotal = await getTotalAmount(cart.id);
+    const newCart = prepareCartObject(cart.id, updatedCart.data.data, cartTotal);
+
+    dispatch({ type: ADD_TO_CART, payload: newCart });
+    return success;
+  } catch (error) {
+    // do something with error
+  }
+};
+
 export const removeProductFromCart = itemId => async (dispatch, getState) => {
   const { cart } = getState();
 

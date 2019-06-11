@@ -41,8 +41,22 @@
       border-bottom: 1px solid $medium-grey;
       align-items: center;
 
+      .product-left {
+        display: flex;
+        align-items: center;
+        min-width: 50%;
+      }
+
+      .product-right {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-grow: 1;
+        width: 50%;
+        text-align: right;
+      }
+
       .remove-product {
-        margin-top: 0.5rem;
         padding: 0.5rem;
         &:hover {
           color: $dark-grey;
@@ -94,6 +108,18 @@
       .nav-cart-product {
         flex-direction: column;
         text-align: center;
+
+        .product-left {
+          flex-direction: column;
+        }
+
+        .product-right {
+          flex-direction: column;
+
+          .quantity-updater {
+            margin: 0.5rem 0;
+          }
+        }
 
         .product-image {
           align-self: center;
