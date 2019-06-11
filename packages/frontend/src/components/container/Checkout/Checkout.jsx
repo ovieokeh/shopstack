@@ -1,103 +1,147 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { EmptyCart } from '../../presentational';
+import RemoveCircle from '@material-ui/icons/RemoveCircle';
+import { getShippingTypesRequest } from '../../../actions/orderActions';
+import {
+  removeProductFromCart,
+  updateItemQuantity,
+  updateCart,
+} from '../../../actions/cartActions';
+import { EmptyCart, QuantityUpdater, ShippingDetailsForm } from '../../presentational';
+import { setShippingRequest } from '../../../actions/orderActions';
 import './Checkout.scss';
 
-const Checkout = ({ cart, customer }) => {
-  window.document.title = 'Checkout | Shop Stack';
+const regions = [
+  { value: 2, label: 'US / Canada' },
+  { value: 3, label: 'Europe' },
+  { value: 4, label: 'Rest of World' },
+];
 
-  const { items } = cart;
-  const customerDetails = customer || {};
+class Checkout extends Component {
+  constructor(props) {
+    super(props);
 
-  const renderShippingDetails = () => {
-    return (
-      <div className="shipping-details">
-        {!customer && (
-          <div className="no-customer">
-            <p>Already have an account?</p>
-            <Link to="/login">Login here</Link>
-          </div>
-        )}
+    const { customer } = this.props;
 
-        <h3 className="ls-3 pd-10 uppercase center">Shipping Details</h3>
+    const defaultRegion = customer
+      ? regions.filter(region => region.label === this.props.customer.region)[0]
+      : regions[0];
 
-        <div className={`detail-group`}>
-          <label htmlFor="name">Name:</label>
-          <input name="name" defaultValue={customerDetails.name || ''} type="text" required />
-        </div>
+    const customerDetails = customer || {};
 
-        <div className={`detail-group`}>
-          <label htmlFor="email">Email:</label>
-          <input name="email" defaultValue={customerDetails.email || ''} type="text" required />
-        </div>
+    this.state = {
+      shippingTypes: [],
+      selectedRegion: defaultRegion,
+      selectedShippingType: [],
+      shippingDetails: {
+        name: customerDetails.name || '',
+        email: customerDetails.email || '',
+        phone: customerDetails.day_phone || '',
+        country: customerDetails.country || '',
+        city: customerDetails.city || '',
+        address: customerDetails.address_1 || '',
+        postalCode: customerDetails.postal_code || '',
+      },
+    };
+  }
 
-        <div className={`detail-group`}>
-          <label htmlFor="dayPhone">Phone:</label>
-          <input
-            name="dayPhone"
-            defaultValue={customerDetails.day_phone || ''}
-            type="text"
-            required
-          />
-        </div>
+  componentDidMount() {
+    this.getShippingRegions();
+  }
 
-        <div className={`detail-group`}>
-          <label htmlFor="country">Country:</label>
-          <input name="country" defaultValue={customerDetails.country || ''} type="text" required />
-        </div>
+  getShippingRegions = async () => {
+    let shippingTypes = await this.props.getShippingTypes(this.state.selectedRegion.value);
 
-        <div className={`detail-group`}>
-          <label htmlFor="city">City:</label>
-          <input name="city" defaultValue={customerDetails.city || ''} type="text" required />
-        </div>
+    const selectShipping = shippingTypes.map(type => ({
+      label: type.shipping_type,
+      value: type.shipping_cost,
+    }));
 
-        <div className={`detail-group`}>
-          <label htmlFor="address">Address:</label>
-          <input
-            name="address"
-            defaultValue={customerDetails.address_1 || ''}
-            type="text"
-            required
-          />
-        </div>
+    await this.setState({
+      shippingTypes: selectShipping,
+      selectedShippingType: selectShipping[0],
+    });
 
-        <div className={`detail-group`}>
-          <label htmlFor="postalCode">Postal Code:</label>
-          <input
-            name="postalCode"
-            defaultValue={customerDetails.postal_code || ''}
-            type="text"
-            required
-          />
-        </div>
-
-        <Link to="/pay" className="order-button">
-          Pay with Stripe
-          <i className="fab fa-stripe-s" />
-        </Link>
-      </div>
-    );
+    this.props.setShippingCost(this.state.selectedShippingType.value);
+    this.props.updateCartTotal(selectShipping[0].value);
   };
 
-  const renderOrderDetails = () => {
+  handleCustomerDetailsChange = event => {
+    this.setState({
+      shippingDetails: {
+        ...this.state.shippingDetails,
+        [event.target.name]: event.target.value,
+      },
+    });
+  };
+
+  handleShippingTypeChange = async selectedOption => {
+    await this.setState({
+      selectedShippingType: selectedOption,
+    });
+
+    this.props.setShippingCost(this.state.selectedShippingType.value);
+    this.props.updateCartTotal(this.state.selectedShippingType.value);
+  };
+
+  handleRegionSelect = async selectedOption => {
+    await this.setState({
+      selectedRegion: selectedOption,
+    });
+
+    this.getShippingRegions();
+  };
+
+  handleQuantityChange = (event, itemId, quantity) => {
+    const type = event.target.name;
+    if (quantity === 1 && type === 'minus') return;
+
+    if (type === 'minus') {
+      this.props.updateQuantity({ itemId, quantity: quantity - 1 });
+    } else {
+      this.props.updateQuantity({ itemId, quantity: quantity + 1 });
+    }
+  };
+
+  handleRemoveItem = id => () => this.props.removeItem(id);
+
+  handleFormSubmit = event => {
+    event.preventDefault();
+    this.props.history.push('/pay');
+  };
+
+  renderOrderDetails = () => {
+    const { items } = this.props.cart;
+
     return (
       <div className="order-details">
         <h3 className="ls-3 pd-10 uppercase center">Cart Summary</h3>
-        <div>
+        <div className="content">
           {items.map(product => {
             return (
               <div key={product.item_id} className="product">
-                <div className="product-details">
+                <div className="left">
                   <img
                     className="product-image"
                     src={`https://backendapi.turing.com/images/products/${product.thumbnail}`}
                     alt={product.name}
                   />
-                  <p>
-                    {product.quantity} x {product.name}
-                  </p>
-                  <p className="price">${product.price}</p>
+                  <p>{product.name}</p>
+                </div>
+                <div className="product-details">
+                  <div className="right">
+                    <QuantityUpdater
+                      quantity={product.quantity}
+                      updateQuantity={event =>
+                        this.handleQuantityChange(event, product.item_id, product.quantity)
+                      }
+                    />
+                    <p className="price">${product.subtotal}</p>
+                    <RemoveCircle
+                      className="clear-icon"
+                      onClick={this.handleRemoveItem(product.item_id)}
+                    />
+                  </div>
                 </div>
               </div>
             );
@@ -105,34 +149,57 @@ const Checkout = ({ cart, customer }) => {
         </div>
 
         <div className="order-summary">
-          <p>Subtotal: ${cart.totalPrice}</p>
-          <p>Shipping: Free</p>
+          <p>Subtotal: ${this.props.cart.subtotal}</p>
+          <p>Shipping: ${this.state.selectedShippingType.value || 0.0}</p>
           <p>Taxes: 0.0%</p>
 
-          <p className="total-price">Total: ${cart.totalPrice}</p>
+          <p className="total-price">Total: ${this.props.cart.totalPrice}</p>
         </div>
       </div>
     );
   };
 
-  if (!cart.count)
+  render() {
+    if (!this.props.cart.count)
+      return (
+        <div className="checkout-container">
+          <EmptyCart />
+        </div>
+      );
+
     return (
       <div className="checkout-container">
-        <EmptyCart />
+        <ShippingDetailsForm
+          customer={this.state.shippingDetails}
+          shippingTypes={this.state.shippingTypes}
+          selectedRegion={this.state.selectedRegion}
+          selectedShippingType={this.state.selectedShippingType}
+          handleCustomerDetailsChange={this.handleCustomerDetailsChange}
+          handleShippingType={this.handleShippingTypeChange}
+          handleRegionSelect={this.handleRegionSelect}
+          handleFormSubmit={this.handleFormSubmit}
+          regions={regions}
+        />
+        {this.renderOrderDetails()}
       </div>
     );
-
-  return (
-    <div className="checkout-container">
-      {renderShippingDetails()}
-      {renderOrderDetails()}
-    </div>
-  );
-};
+  }
+}
 
 const mapStateToProps = state => ({
   cart: state.cart,
   customer: state.auth.customer,
 });
 
-export default connect(mapStateToProps)(Checkout);
+const mapDispatchToProps = dispatch => ({
+  removeItem: itemId => dispatch(removeProductFromCart(itemId)),
+  updateQuantity: details => dispatch(updateItemQuantity(details)),
+  getShippingTypes: id => dispatch(getShippingTypesRequest(id)),
+  updateCartTotal: shippingFee => dispatch(updateCart(shippingFee)),
+  setShippingCost: cost => dispatch(setShippingRequest(cost)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Checkout);

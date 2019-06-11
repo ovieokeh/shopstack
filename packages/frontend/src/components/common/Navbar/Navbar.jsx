@@ -133,7 +133,7 @@ const Navbar = props => {
         <div>
           <div onClick={toggleCartDetails} className="nav-cart">
             <ShoppingCart />
-            <span>{`${cart.count} Cart $${cart.totalPrice} USD`}</span>
+            <span>{`${cart.count} Cart $${cart.subtotal} USD`}</span>
           </div>
           {renderCartDetails()}
           <Menu

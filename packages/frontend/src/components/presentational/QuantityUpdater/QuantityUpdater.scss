@@ -3,7 +3,6 @@
 .quantity-container {
   display: flex;
   align-items: center;
-  margin: 1rem 0;
 
   span {
     display: inline-flex;
@@ -13,6 +12,8 @@
     height: 33px;
     background-color: white;
     border: 1px solid $medium-grey;
+    border-left: 0;
+    border-right: 0;
     font-size: 0.8rem;
     text-align: center;
     cursor: pointer;

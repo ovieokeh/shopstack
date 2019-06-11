@@ -1,4 +1,5 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, CLEAR_CART } from '../actions/cartActions';
+import { ADD_TO_CART, UPDATE_CART, REMOVE_FROM_CART, CLEAR_CART } from '../actions/cartActions';
+import { SET_SHIPPING_COST } from '../actions/orderActions';
 
 let initialState;
 
@@ -12,6 +13,8 @@ try {
     items: [],
     count: 0,
     totalPrice: 0,
+    subtotal: 0,
+    shippingCost: 0,
   };
 }
 
@@ -21,6 +24,18 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+      };
+
+    case UPDATE_CART:
+      return {
+        ...state,
+        ...action.payload,
+      };
+
+    case SET_SHIPPING_COST:
+      return {
+        ...state,
+        shippingCost: action.payload,
       };
 
     case REMOVE_FROM_CART:

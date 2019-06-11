@@ -93,7 +93,9 @@ class Shop extends Component {
 
   handleSearchInput = event => this.setState({ searchInputValue: event.target.value });
 
-  handleSearchSubmit = () => {
+  handleSearchSubmit = event => {
+    event.preventDefault();
+
     const params = {
       searchQuery: this.state.searchInputValue,
       allWords: true,

@@ -17,6 +17,7 @@ import SnackBar from './SnackBar/SnackBar';
 import CustomerOrders from './CustomerOrders/CustomerOrders';
 import SearchInput from './SearchInput/SearchInput';
 import Limit from './Limit/Limit';
+import ShippingDetailsForm from './ShippingDetailsForm/ShippingDetailsForm';
 
 export {
   Homepage,
@@ -38,4 +39,5 @@ export {
   CustomerOrders,
   SearchInput,
   Limit,
+  ShippingDetailsForm,
 };
