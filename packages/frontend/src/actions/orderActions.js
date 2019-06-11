@@ -4,12 +4,19 @@ require('dotenv').config();
 export const GET_ORDERS_SUCCESS = 'GET_ORDERS_SUCCESS';
 export const GET_SHIPPING_TYPE_SUCCESS = 'GET_SHIPPING_TYPE_SUCCESS';
 export const SET_SHIPPING_COST = 'SET_SHIPPING_COST';
+export const SET_SHIPPING_ID = 'SET_SHIPPING_ID';
+
+export const SET_CUSTOMER_DETAILS = 'SET_CUSTOMER_DETAILS';
+export const CLEAR_CUSTOMER_DETAILS = 'CLEAR_CUSTOMER_DETAILS';
 
 export const getOrdersSuccess = orders => ({ type: GET_ORDERS_SUCCESS, payload: orders });
 export const getShippingTypeSuccess = shippingTypes => ({
   type: GET_SHIPPING_TYPE_SUCCESS,
   payload: shippingTypes,
 });
+
+export const setCustomerDetails = details => ({ type: SET_CUSTOMER_DETAILS, payload: details });
+export const clearCustomerDetails = () => ({ type: CLEAR_CUSTOMER_DETAILS });
 
 export const getOrdersRequest = () => async (dispatch, getState) => {
   const url = `${process.env.REACT_APP_API_URL}/orders/inCustomer`;
@@ -50,9 +57,7 @@ export const getShippingTypesRequest = shippingRegionId => async () => {
   }
 };
 
-export const setShippingRequest = cost => async dispatch => {
-  dispatch({
-    type: SET_SHIPPING_COST,
-    payload: cost,
-  });
+export const setShippingRequest = (cost, id) => async dispatch => {
+  dispatch({ type: SET_SHIPPING_ID, payload: id });
+  dispatch({ type: SET_SHIPPING_COST, payload: cost });
 };

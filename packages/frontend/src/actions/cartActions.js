@@ -88,7 +88,7 @@ export const updateCart = shippingFee => async (dispatch, getState) => {
     cart.id,
     cart.items,
     cart.subtotal,
-    Number(cart.subtotal) + Number(shippingFee),
+    (Number(cart.subtotal) + Number(shippingFee)).toFixed(2),
   );
 
   dispatch({

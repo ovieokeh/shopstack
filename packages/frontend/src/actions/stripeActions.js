@@ -10,26 +10,35 @@ export const POST_CHARGE_FAILURE = 'POST_CHARGE_FAILURE';
 export const postChargeSuccess = () => ({ type: POST_CHARGE_SUCCESS });
 export const postChargeFailure = () => ({ type: POST_CHARGE_FAILURE });
 
+export const createCustomerRequest = customerDetails => async dispatch => {
+  const url = `${process.env.REACT_APP_API_URL}/stripe/customer`;
+  try {
+    dispatch(loadingBegin());
+    const customer = await Axios.post(url, customerDetails);
+    return customer.data.data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 export const postChargeRequest = chargeDetails => async (dispatch, getState) => {
   const url = `${process.env.REACT_APP_API_URL}/stripe/charge`;
   const orderUrl = `${process.env.REACT_APP_API_URL}/orders`;
 
-  const { accessToken } = getState().auth;
-  const { id } = getState().cart;
-  const headers = { headers: { 'user-key': accessToken } };
+  const { auth, cart, order } = getState();
+  const headers = { headers: { 'user-key': auth.accessToken } };
 
   try {
     dispatch(loadingBegin());
-    const order = await Axios.post(
-      orderUrl,
-      {
-        cartId: id,
-        shippingId: 1,
-        taxId: 1,
-      },
-      headers,
-    );
-    const orderId = order.data.data;
+
+    const orderDetails = {
+      cartId: cart.id,
+      shippingId: order.shippingId,
+      taxId: 1,
+    };
+
+    const orderRes = await Axios.post(orderUrl, orderDetails, headers);
+    const orderId = orderRes.data.data;
 
     const success = await Axios.post(url, { ...chargeDetails, orderId }, headers);
     dispatch(loadingDone());
@@ -37,7 +46,7 @@ export const postChargeRequest = chargeDetails => async (dispatch, getState) => 
     dispatch(postChargeSuccess());
     dispatch(getOrdersRequest());
     dispatch(clearCart());
-    return success;
+    return success.data.data;
   } catch (error) {
     dispatch(postChargeFailure(error.response.data.message));
   }

@@ -10,7 +10,7 @@ const CustomerOrders = ({ orders, getOrders, getOrder }) => {
 
   useEffect(() => {
     getOrders();
-  });
+  }, [getOrders]);
 
   const toggleAlert = () => setIsAlertOpen(!isAlertOpen);
 
@@ -20,28 +20,28 @@ const CustomerOrders = ({ orders, getOrders, getOrder }) => {
         <div className="order-summary">
           <div className="summary">
             <p>Ordered on:</p>
-            <p>{new Date(order.totalOrderDetails.created_on).toDateString()}</p>
+            <p>{new Date(order.details.created_on).toDateString()}</p>
           </div>
 
           <div className="summary">
             <p>Total amount:</p>
-            <p>${order.totalOrderDetails.total_amount}</p>
+            <p>${order.details.total_amount}</p>
           </div>
 
           <div className="summary">
             <p>Number of items:</p>
-            <p>{order.orderDetails.length}</p>
+            <p>{order.order.length}</p>
           </div>
         </div>
 
         <div className="order-items">
           <h3>Order items</h3>
 
-          {order.orderDetails.map(item => (
-            <div key={item.productId} className="item">
+          {order.order.map(item => (
+            <div key={item.product_id} className="item">
               <div className="item-details">
                 <small>Item</small>
-                <small>{item.productName}</small>
+                <small>{item.product_name}</small>
               </div>
 
               <div className="item-details">
@@ -51,7 +51,7 @@ const CustomerOrders = ({ orders, getOrders, getOrder }) => {
 
               <div className="item-details">
                 <small>Price</small>
-                <small>${item.unitCost}</small>
+                <small>${item.unit_cost}</small>
               </div>
 
               <div className="item-details">
@@ -65,10 +65,10 @@ const CustomerOrders = ({ orders, getOrders, getOrder }) => {
     );
   };
 
-  const handleOrderClick = id => async () => {
+  const handleOrderClick = (id, details) => async () => {
     const order = await getOrder(id);
     setIsAlertOpen(true);
-    setSelectedOrder(buildOrderDetails(order));
+    setSelectedOrder(buildOrderDetails({ order, details: { ...details.order } }));
     // do something with order
   };
 
@@ -76,7 +76,11 @@ const CustomerOrders = ({ orders, getOrders, getOrder }) => {
     if (!orders.length) return <p>No Orders yet</p>;
 
     return orders.map(order => (
-      <div onClick={handleOrderClick(order.order_id)} key={order.order_id} className="order">
+      <div
+        onClick={handleOrderClick(order.order_id, { order })}
+        key={order.order_id}
+        className="order"
+      >
         <p>${order.total_amount}</p>
         <small>{new Date(order.created_on).toDateString()}</small>
       </div>

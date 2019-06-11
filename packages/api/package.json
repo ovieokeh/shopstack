@@ -13,7 +13,7 @@
   "scripts": {
     "build": "rm -rf ./dist && babel src -d ./dist --copy-files && npm run migrate",
     "start": "node ./dist/index.js",
-    "dev": "nodemon --exec babel-node ./src/index.js",
+    "dev": "export NODE_ENV=development && nodemon --exec babel-node ./src/index.js",
     "migrate": "node ./src/database/runMigrations.js",
     "migrate:undo": "node ./src/database/revertMigrations.js",
     "test": "export NODE_ENV=test && npm run migrate && nyc mocha --recursive ./test/**/*spec.js --exit --require @babel/register && npm run migrate:undo",

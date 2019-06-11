@@ -7,6 +7,7 @@ import productReducer from './productReducer';
 import cartReducer from './cartReducer';
 import searchReducer from './searchReducer';
 import filterReducer from './filterReducer';
+import orderReducer from './orderReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -17,4 +18,5 @@ export default combineReducers({
   cart: cartReducer,
   search: searchReducer,
   filters: filterReducer,
+  order: orderReducer,
 });

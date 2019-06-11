@@ -24,9 +24,9 @@ class OrderModel {
   }
 
   async getInfo({ orderId }) {
-    const info = await this.DB.query('CALL orders_get_order_info(?)', [orderId]);
+    const info = await this.DB.query('CALL orders_get_order_details(?)', [orderId]);
     if (!info) return null;
-    return info[0][0];
+    return info[0];
   }
 
   async getShortDetails({ orderId }) {

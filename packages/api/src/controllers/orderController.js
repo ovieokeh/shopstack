@@ -54,7 +54,7 @@ class OrderController {
       const orderId = request.params.id;
 
       const orderInfo = await this.OrderService.getOrderInfo(orderId);
-      if (!orderInfo) {
+      if (!orderInfo.length) {
         respond(response, 'error', 404, 'order not found');
         return;
       }

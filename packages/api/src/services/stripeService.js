@@ -26,6 +26,15 @@ class StripeService {
 
     return charge;
   }
+
+  static async createCustomer(details, source) {
+    const customer = await stripe.customers.create({
+      ...details,
+      source,
+    });
+
+    return customer;
+  }
 }
 
 export default StripeService;
