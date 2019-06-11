@@ -8,7 +8,7 @@ import {
   updateCart,
 } from '../../../actions/cartActions';
 import { EmptyCart, QuantityUpdater, ShippingDetailsForm } from '../../presentational';
-import { setShippingRequest } from '../../../actions/orderActions';
+import { setShippingRequest, setCustomerDetails } from '../../../actions/orderActions';
 import './Checkout.scss';
 
 const regions = [
@@ -23,9 +23,10 @@ class Checkout extends Component {
 
     const { customer } = this.props;
 
-    const defaultRegion = customer
-      ? regions.filter(region => region.label === this.props.customer.region)[0]
-      : regions[0];
+    const defaultRegion =
+      customer && customer.region
+        ? regions.filter(region => region.label === customer.region)[0]
+        : regions[0];
 
     const customerDetails = customer || {};
 
@@ -53,6 +54,7 @@ class Checkout extends Component {
     let shippingTypes = await this.props.getShippingTypes(this.state.selectedRegion.value);
 
     const selectShipping = shippingTypes.map(type => ({
+      id: type.shipping_id,
       label: type.shipping_type,
       value: type.shipping_cost,
     }));
@@ -62,7 +64,9 @@ class Checkout extends Component {
       selectedShippingType: selectShipping[0],
     });
 
-    this.props.setShippingCost(this.state.selectedShippingType.value);
+    const { selectedShippingType } = this.state;
+
+    this.props.setShippingCost(selectedShippingType.value, selectedShippingType.id);
     this.props.updateCartTotal(selectShipping[0].value);
   };
 
@@ -80,7 +84,9 @@ class Checkout extends Component {
       selectedShippingType: selectedOption,
     });
 
-    this.props.setShippingCost(this.state.selectedShippingType.value);
+    const { selectedShippingType } = this.state;
+
+    this.props.setShippingCost(selectedShippingType.value, selectedShippingType.id);
     this.props.updateCartTotal(this.state.selectedShippingType.value);
   };
 
@@ -105,8 +111,9 @@ class Checkout extends Component {
 
   handleRemoveItem = id => () => this.props.removeItem(id);
 
-  handleFormSubmit = event => {
+  handleFormSubmit = async event => {
     event.preventDefault();
+    await this.props.setCustomerDetails(this.state.shippingDetails);
     this.props.history.push('/pay');
   };
 
@@ -196,7 +203,8 @@ const mapDispatchToProps = dispatch => ({
   updateQuantity: details => dispatch(updateItemQuantity(details)),
   getShippingTypes: id => dispatch(getShippingTypesRequest(id)),
   updateCartTotal: shippingFee => dispatch(updateCart(shippingFee)),
-  setShippingCost: cost => dispatch(setShippingRequest(cost)),
+  setShippingCost: (cost, id) => dispatch(setShippingRequest(cost, id)),
+  setCustomerDetails: details => dispatch(setCustomerDetails(details)),
 });
 
 export default connect(

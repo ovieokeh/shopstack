@@ -7,9 +7,8 @@ import {
   CardCVCElement,
   injectStripe,
 } from 'react-stripe-elements';
-import { postChargeRequest } from '../../../actions/stripeActions';
+import { postChargeRequest, createCustomerRequest } from '../../../actions/stripeActions';
 import { SnackBar } from '..';
-import { history } from '../../../utilities';
 import './CheckoutForm.scss';
 
 class CheckoutForm extends Component {
@@ -18,6 +17,7 @@ class CheckoutForm extends Component {
 
     this.state = {
       success: false,
+      receiptUrl: '',
     };
 
     this.customer = this.props.customer;
@@ -27,19 +27,31 @@ class CheckoutForm extends Component {
 
   handleSubmit = async event => {
     event.preventDefault();
+    const { customerDetails } = this.props;
 
-    const { token } = await this.props.stripe.createToken();
-    await this.postCharge({
-      amount: String(this.cart.totalPrice).replace('.', ''),
-      receiptEmail: this.customer.email,
-      source: token.id,
-      orderId: 909,
+    const { token } = await this.props.stripe.createToken({
+      name: customerDetails.name,
     });
 
-    this.setState({ success: true });
-    setTimeout(() => {
-      history.push('/customer');
-    }, 500);
+    await this.props.createCustomer({ customerDetails, source: token.id });
+
+    const res = await this.props.stripe.createToken({
+      name: customerDetails.name,
+    });
+
+    const secondToken = res.token;
+
+    const order = await this.postCharge({
+      amount: String(this.cart.totalPrice).replace('.', ''),
+      source: secondToken.id,
+      receiptEmail: customerDetails.email,
+    });
+
+    if (!order) {
+      this.setState({ success: 'error' });
+    }
+
+    this.setState({ success: true, receiptUrl: order.receipt_url });
   };
 
   handleChange = change => {
@@ -49,10 +61,27 @@ class CheckoutForm extends Component {
   render() {
     return (
       <div className="checkout-form">
-        {this.state.success && <SnackBar message="Payment Successful" />}
-        <Link className="cancel-payment" to="/checkout">
-          Cancel Payment
-        </Link>
+        {this.state.success === 'error' && (
+          <SnackBar variant="error" message="Payment Unsuccessful" />
+        )}
+        {this.state.success && (
+          <SnackBar
+            variant="success"
+            message={
+              <div className="snackbar-div">
+                <p>
+                  Payment Successful! <a href={this.state.receiptUrl}>View receipt</a>
+                </p>
+                <a href="/customer">My profile</a>
+              </div>
+            }
+          />
+        )}
+        {!this.state.success && (
+          <Link className="cancel-payment" to="/checkout">
+            Cancel Payment
+          </Link>
+        )}
         <p>Amount: ${this.cart.totalPrice}</p>
         <form onSubmit={this.handleSubmit}>
           <label>
@@ -77,9 +106,11 @@ class CheckoutForm extends Component {
 const mapStateToProps = state => ({
   customer: state.auth.customer,
   cart: state.cart,
+  customerDetails: state.order.customerDetails,
 });
 const mapDispatchToProps = dispatch => ({
   postCharge: details => dispatch(postChargeRequest(details)),
+  createCustomer: details => dispatch(createCustomerRequest(details)),
 });
 
 export default connect(

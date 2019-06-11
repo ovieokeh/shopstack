@@ -51,6 +51,8 @@ const reducer = (state = initialState, action) => {
         items: [],
         count: 0,
         totalPrice: 0,
+        subtotal: 0,
+        shippingCost: 0,
       };
 
     default:

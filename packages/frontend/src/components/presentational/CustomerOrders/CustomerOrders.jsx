@@ -10,7 +10,7 @@ const CustomerOrders = ({ orders, getOrders, getOrder }) => {
 
   useEffect(() => {
     getOrders();
-  });
+  }, [getOrders]);
 
   const toggleAlert = () => setIsAlertOpen(!isAlertOpen);
 
