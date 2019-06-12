@@ -11,13 +11,63 @@ This project is an E-Commerce store that sells T-Shirts powered with a Stripe pa
 
 Access the demo here: [Link to Hosted Demo](http://shopstack-turing.herokuapp.com/)
 
-## Backend API
+## How To Run The App
+This app makes use of `.env` files to store sensitive data so first and foremost, you must have two `.env` files: one in the `packages/api` directory and one in the `packages/frontend` directory.
+
+The `.env` file in the `packages/api` directory should contain the following data:
+```
+NODE_ENV=development
+PORT=[preferred port]
+SALT_ROUNDS=[any integer > 0 && < 20]
+SECRET_KEY=[a string for encrypting JWT tokens]
+
+DB_CONNECTION_HOST=[your mysql database host]
+DB_CONNECTION_USER=[your mysql database user]
+DB_CONNECTION_PASSWORD=[your mysql database password]
+DB_CONNECTION_NAME=[your mysql database name]
+
+DB_CONNECTION_HOST_TEST=[your mysql test database host]
+DB_CONNECTION_USER_TEST=[your mysql test database user]
+DB_CONNECTION_PASSWORD_TEST=[your mysql test database password]
+DB_CONNECTION_NAME_TEST=[your mysql test database name]
+
+STRIPE_SECRET_KEY=[a stripe api key gotten from stripe]
+```
+
+The `.env` file in the `packages/frontend` directory should contain the following data:
+```
+REACT_APP_API_URL=[http://localhost:<your_api_port>/api]
+```
+
+After setting up the environment keys, you can then run the following commands to get the app started:
+```
+$ npm i && npm run install:all
+$ npm start
+```
+Now navigate to `http://localhost:<your_api_port>` from your browser and the app should be live.
+
+Building The App
+------
+If you want to build the app and run the compiled version locally, you have to add a `.env` file in the root directory of the project. The `.env` file should contain the contents of the one present in the `packages/api` directory.
+
+Then in the root directory, run the following commands:
+```
+$ npm run build
+$ npm start
+```
+
+## How To Run The API Tests
+There are tests for all the API endpoints to ensure that they work as expected. To run them, first ensure that you have your environment keys setup then navigate to `/packages/api` and run `npm t`.
+
+## Project Info
+
+### Backend API
 
 Technologies used:
 
 - Node.js with Express.js
 - JWT for authentication
-- Sequelize for database management
+- node-mysql2 for database management
 - Redis for server side caching of GET endpoints
 - Throng for worker management
 
@@ -49,7 +99,7 @@ DB_NAME_TEST=<DATABASE_NAME>
 DB_HOST_TEST=<DATABASE_HOST>
 ```
 
-## Frontend App
+### Frontend App
 
 Technologies used:
 
@@ -59,4 +109,4 @@ Technologies used:
 - Axios (for network calls to the backend)
 - Sass (for styling)
 
-The frontend is a fully responsive Single Page Application (SPA) optimised for performance by limiting renders when necessary.
+The frontend is a fully responsive Single Page Application (SPA) optimised for performance by limiting renders when possible.
