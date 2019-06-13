@@ -18,7 +18,8 @@ const workers = process.env.WEB_CONCURRENCY || 3;
 const env = process.env.NODE_ENV;
 
 async function start() {
-  const swaggerDocument = await getSwaggerDocWithRefs('./documentation/index.yaml');
+  const docPath = path.resolve(__dirname, '../documentation/index.yaml');
+  const swaggerDocument = await getSwaggerDocWithRefs(docPath);
 
   app.use(cors());
   app.use(expressValidator());

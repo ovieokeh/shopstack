@@ -19,9 +19,4 @@ async function getSwaggerDocWithRefs(rootFilePath) {
   return swaggerDoc.resolved;
 }
 
-async function retrieveDoc() {
-  const swaggerDoc = await getSwaggerDocWithRefs('./index.yaml');
-  return swaggerDoc;
-}
-
 module.exports = getSwaggerDocWithRefs;
