@@ -9,7 +9,7 @@ This is a monorepo containing the API and Frontend of the Turing Fullstack test.
 
 This project is an E-Commerce store that sells T-Shirts powered with a Stripe payment system. Here are the technologies used in the project.
 
-Access the demo here: [Link to Hosted Demo](http://shopstack-turing.herokuapp.com/)
+Access the demo here: [Link to Hosted Demo](http://shopstack-e.herokuapp.com/)
 
 ## How To Run The App
 This app makes use of `.env` files to store sensitive data so first and foremost, you must have two `.env` files: one in the `packages/api` directory and one in the `packages/frontend` directory.
