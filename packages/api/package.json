@@ -17,7 +17,8 @@
     "migrate": "node ./src/database/runMigrations.js",
     "migrate:undo": "node ./src/database/revertMigrations.js",
     "test": "export NODE_ENV=test && npm run migrate && nyc mocha --recursive ./test/**/*spec.js --exit --require @babel/register && npm run migrate:undo",
-    "coverage": "nyc report --reporter=lcov"
+    "coverage": "nyc report --reporter=lcov",
+    "doc": "jsdoc -r src && serve -o ./out"
   },
   "keywords": [
     "node.js",
@@ -38,11 +39,15 @@
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "express-validator": "^5.3.1",
+    "jsdoc": "^3.6.2",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^1.6.5",
     "redis": "^2.8.0",
+    "serve": "^11.0.1",
     "short-uuid": "^3.1.1",
     "stripe": "^7.1.0",
+    "swagger-jsdoc": "^3.2.9",
+    "swagger-ui-express": "^4.0.6",
     "throng": "^4.0.0"
   },
   "devDependencies": {
@@ -61,6 +66,7 @@
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-prettier": "^3.1.0",
     "expect.js": "^0.3.1",
+    "json-refs": "^3.0.13",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "prettier": "^1.17.1"

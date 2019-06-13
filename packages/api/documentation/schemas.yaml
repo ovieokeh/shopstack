@@ -1,0 +1,220 @@
+components:
+  schemas:
+    Department:
+      properties:
+        name:
+          type: string
+          example: Regional
+        description:
+          type: string
+          example: Proud of your country? Wear a T-shirt with a national symbol stamp!
+    DepartmentWithID:
+      allOf:
+        - required:
+            - department_id
+          properties:
+            department_id:
+              type: integer
+              example: 1
+        - $ref: '#/components/schemas/Department'
+
+    Category:
+      properties:
+        name:
+          type: string
+          example: French
+        description:
+          type: string
+          example: The French have always had an eye for beauty...
+    CategoryWithID:
+      allOf:
+        - required:
+            - category_id
+          properties:
+            category_id:
+              type: integer
+              example: 1
+        - $ref: '#/components/schemas/Category'
+    CategoriesInProduct:
+      properties:
+        category_id:
+          type: integer
+          example: 1
+        department_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: French
+
+    Attribute:
+      properties:
+        attribute_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Size
+    AttributeValue:
+      properties:
+        attribute_value_id:
+          type: integer
+          example: 1
+        value:
+          type: string
+          example: S
+    ProductAttribute:
+      properties:
+        attribute_name:
+          type: string
+          example: Color
+        attribute_value_id:
+          type: integer
+          example: 6
+        attribute_value:
+          type: string
+          example: White
+
+    Product:
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Haute Couture
+        description:
+          type: string
+          example: This stamp publicized the dress making industry...
+        price:
+          type: string
+          example: 15.99
+        discounted_price:
+          type: string
+          example: 14.95
+        thumbnail:
+          type: string
+          example: haute-couture-thumbnail.gif
+    SingleProduct:
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Haute Couture
+        description:
+          type: string
+          example: This stamp publicized the dress making industry...
+        price:
+          type: string
+          example: 15.99
+        discounted_price:
+          type: string
+          example: 14.95
+        image:
+          type: string
+          example: haute-couture.gif
+        image_2:
+          type: string
+          example: haute-couture-2.gif
+        thumbnail:
+          type: string
+          example: haute-couture-thumbnail.gif
+        display:
+          type: integer
+          example: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductAttribute'
+    ProductPagination:
+      allOf:
+        - $ref: '#/components/schemas/Pagination'
+        - required:
+            - products
+          properties:
+            products:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+    SearchPagination:
+      allOf:
+        - $ref: '#/components/schemas/Pagination'
+        - required:
+            - results
+          properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+    ProductLocations:
+      properties:
+        category_id:
+          type: integer
+          example: 1
+        category_name:
+          type: string
+          example: French
+        department_id:
+          type: integer
+          example: 1
+        department_name:
+          type: string
+          example: Regional
+    ProductReview:
+      properties:
+        name:
+          type: string
+          example: Test User
+        review:
+          type: string
+          example: This product looks really stylish
+        rating:
+          type: integer
+          example: 4
+        created_on:
+          type: string
+          example: 2019-06-13T13:01:22.000Z
+
+    Pagination:
+      properties:
+        totalCount:
+          type: integer
+          example: 101
+        count:
+          type: integer
+          example: 20
+        page:
+          type: integer
+          example: 1
+
+    Success:
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: data retrieved successfully
+        data:
+          oneOf:
+            - type: object
+            - type: array
+            - type: boolean
+
+    Error:
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: data not found
