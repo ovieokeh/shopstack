@@ -1,4 +1,4 @@
-# ecommerce-turing
+# shopstack
 A full-stack E-Commerce solution built for the Turing project test.
 
 [![Build Status](https://travis-ci.com/ovieokeh/ecommerce-turing.svg?token=ib4xukwyyyzrf2XQqfZc&branch=develop)](https://travis-ci.com/ovieokeh/ecommerce-turing)
@@ -70,6 +70,8 @@ Technologies used:
 - node-mysql2 for database management
 - Redis for server side caching of GET endpoints
 - Throng for worker management
+
+Access the API Documentation here: [Link to Documentation](https://shopstack-e.herokuapp.com/api-docs/). To access it on local, build the app, run `npm start` and navigate to `localhost:[port]/api-docs`.
 
 The API is built on top of Node.js with the Express framework for performance and maintainability. For security, protected endpoints require a valid JWT token which is attached in the request headers like so:
 
