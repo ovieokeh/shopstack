@@ -177,6 +177,213 @@ components:
           type: string
           example: 2019-06-13T13:01:22.000Z
 
+    Customer:
+      properties:
+        customer_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Test User
+        email:
+          type: string
+          example: testuser@example.com
+        credit_card:
+          type: string
+          example: ''
+        address_1:
+          type: string
+          example: ''
+        address_2:
+          type: string
+          example: ''
+        city:
+          type: string
+          example: ''
+        region:
+          type: string
+          example: ''
+        postal_code:
+          type: string
+          example: ''
+        country:
+          type: string
+          example: ''
+        shipping_region_id:
+          type: integer
+          example: 1
+        day_phone:
+          type: string
+          example: ''
+        eve_phone:
+          type: string
+          example: ''
+        mob_phone:
+          type: string
+          example: ''
+    UpdatedCustomer:
+      allOf:
+        - $ref: '#/components/schemas/Customer'
+        - required:
+          - day_phone
+          - eve_phone
+          - mob_phone
+          properties:
+            day_phone:
+              type: string
+              example: '+351323213511235'
+            eve_phone:
+              type: string
+              example: '+452436143246123'
+            mob_phone:
+              type: string
+              example: '+351323213511235'
+    UpdatedCustomerAddress:
+      allOf:
+        - $ref: '#/components/schemas/UpdatedCustomer'
+        - required:
+          - address_1
+          - address_2
+          - city
+          - region
+          - postal_code
+          - country
+          - shipping_region_id
+          properties:
+            address_1:
+              type: string
+              example: 'fake address 1'
+            address_2:
+              type: string
+              example: 'fake address 2'
+            city:
+              type: string
+              example: 'universe city'
+            region:
+              type: string
+              example: 'rest of the world'
+            postal_code:
+              type: string
+              example: '00000'
+            country:
+              type: string
+              example: 'test country'
+            shipping_region_id:
+              type: integer
+              example: 3
+    UpdatedCustomerCreditCard:
+      allOf:
+        - $ref: '#/components/schemas/UpdatedCustomerAddress'
+        - required:
+          - credit_card
+          properties:
+            credit_card:
+              type: string
+              example: 'XXXXXXXX5100'
+
+    Order:
+      properties:
+        order_id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        attributes:
+          type: string
+          example: 'black,xl'
+        product_name:
+          type: string
+          example: "Arc d'Triomphe"
+        quantity:
+          type: integer
+          example: 1
+        unit_cost:
+          type: string
+          example: '14.99'
+        subtotal:
+          type: string
+          example: '14.99'
+    CustomerOrder:
+      properties:
+        order_id:
+          type: integer
+          example: 1
+        total_amount:
+          type: string
+          example: '14.99'
+        created_on:
+          type: string
+          example: '2019-06-21T11:52:19.000Z'
+        shipped_on:
+          type: string
+        status:
+          type: integer
+          example: 0
+        name:
+          type: string
+          example: 'Test User'
+
+    AddToCart:
+      properties:
+        item_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Arc d'Triomphe"
+        thumbnail:
+          type: string
+          example: arc-d-triomphe-thumbnail.gif
+        attributes:
+          type: string
+          example: 'black,xl'
+        price:
+          type: string
+          example: '14.99'
+        quantity:
+          type: integer
+          example: 1
+        subtotal:
+          type: string
+          example: '14.99'
+      
+    Tax:
+      properties:
+        tax_id:
+          type: integer
+          example: 1
+        tax_type:
+          type: string
+          example: Sales Tax at 8.5%
+        tax_percentage:
+          type: string
+          example: 8.50%
+
+    ShippingRegion:
+      properties:
+        shipping_region_id:
+          type: integer
+          example: 1
+        shipping_region:
+          type: string
+          example: Please Select
+    SingleShippingRegion:
+      properties:
+        shipping_id:
+          type: integer
+          example: 1
+        shipping_type:
+          type: string
+          example: Next Day Delivery ($20)
+        shipping_cost:
+          type: string
+          example: 20.00
+        shipping_region_id:
+          type: integer
+          example: 2
+        
+
     Pagination:
       properties:
         totalCount:

@@ -17,8 +17,7 @@
     "migrate": "node ./src/database/runMigrations.js",
     "migrate:undo": "node ./src/database/revertMigrations.js",
     "test": "export NODE_ENV=test && npm run migrate && nyc mocha --recursive ./test/**/*spec.js --exit --require @babel/register && npm run migrate:undo",
-    "coverage": "nyc report --reporter=lcov",
-    "doc": "jsdoc -r src && serve -o ./out"
+    "coverage": "nyc report --reporter=lcov"
   },
   "keywords": [
     "node.js",

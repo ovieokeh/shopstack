@@ -7,7 +7,14 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
+  - url: https://shopstack-sandbox.herokuapp.com
   - url: http://localhost:3080/api
+components:
+  securitySchemes:
+    userKey:
+      type: apiKey
+      name: USER-KEY
+      in: header
 tags:
   - name: departments
     description: Everything about the departments endpoint
@@ -17,6 +24,16 @@ tags:
     description: Everything about the attributes endpoint
   - name: products
     description: Everything about the products endpoint
+  - name: customers
+    description: Everything about the customers endpoint
+  - name: orders
+    description: Everything about the orders endpoint
+  - name: shoppingcart
+    description: Everything about the shoppingcart endpoint
+  - name: tax
+    description: Everything about the tax endpoint
+  - name: shipping
+    description: Everything about the shipping endpoint
 
 paths:
   /departments:
@@ -705,13 +722,13 @@ paths:
           schema:
             type: integer
         - name: review
-          in: requestBody
+          in: formData
           description: review of the product
           required: true
           schema:
             type: string
         - name: rating
-          in: requestBody
+          in: formData
           description: rating of the product (1 - 5)
           required: true
           schema:
@@ -729,7 +746,7 @@ paths:
                       - message
                     properties:
                       message:
-                        example: reviews retrieved successfully
+                        example: review posted successfully
                       data:
                         type: boolean
                         example: true
@@ -746,3 +763,1100 @@ paths:
                       message:
                         type: string
                         example: product not found
+
+  /customers:
+    post:
+      tags:
+        - customers
+      summary: Create a new customer
+      parameters:
+        - name: name
+          in: formData
+          description: name of the customer
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: formData
+          description: email address of the customer
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: formData
+          description: a secure password
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: A customer object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - data
+                      - message
+                    properties:
+                      message:
+                        example: customer created successfully
+                      data:
+                        type: object
+                        properties:
+                          customer:
+                            $ref: './schemas.yaml#/components/schemas/Customer'
+                          accessToken:
+                            type: string
+                          expiresIn:
+                            type: string
+        '409':
+          description: The customer already exists
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: this email address is already in use
+  /customers/login:
+    post:
+      tags:
+        - customers
+      summary: Login a customer
+      parameters:
+        - name: email
+          in: formData
+          description: the customer's email address
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: formData
+          description: the customer's password
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A customer object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - data
+                      - message
+                    properties:
+                      message:
+                        example: customer created successfully
+                      data:
+                        type: object
+                        properties:
+                          customer:
+                            $ref: './schemas.yaml#/components/schemas/Customer'
+                          accessToken:
+                            type: string
+                          expiresIn:
+                            type: string
+        '401':
+          description: The customer's login credentials are wrong
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: invalid login credentials
+  /customer:
+    get:
+      tags:
+        - customers
+      summary: Retrieve a customer's details
+      security:
+        - userKey: []
+      responses:
+        '200':
+          description: A customer object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - data
+                      - message
+                    properties:
+                      message:
+                        example: customer retrieved successfully
+                      data:
+                        $ref: './schemas.yaml#/components/schemas/Customer'
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+    put:
+      tags:
+        - customers
+      summary: Update a customer's details
+      parameters:
+        - name: name
+          in: formData
+          description: a new name for the customer
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: formData
+          description: a new email address
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: formData
+          description: a new password
+          required: false
+          schema:
+            type: string
+        - name: dayPhone
+          in: formData
+          description: a new day phone number
+          required: false
+          schema:
+            type: string
+        - name: evePhone
+          in: formData
+          description: a new evening phone number
+          required: false
+          schema:
+            type: string
+        - name: mobPhone
+          in: formData
+          description: a new mobile phone number
+          required: false
+          schema:
+            type: string
+      security:
+        - userKey: []
+      responses:
+        '200':
+          description: A customer object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - data
+                      - message
+                    properties:
+                      message:
+                        example: customer updated successfully
+                      data:
+                        $ref: './schemas.yaml#/components/schemas/UpdatedCustomer'
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+  /customer/address:
+    put:
+      tags:
+        - customers
+      summary: Update a customer's address
+      parameters:
+        - name: address1
+          in: formData
+          description: a new address
+          required: true
+          schema:
+            type: string
+        - name: address2
+          in: formData
+          description: a new address
+          required: false
+          schema:
+            type: string
+        - name: city
+          in: formData
+          description: a new city
+          required: true
+          schema:
+            type: string
+        - name: region
+          in: formData
+          description: a new region
+          required: true
+          schema:
+            type: string
+        - name: postalCode
+          in: formData
+          description: a new postalCode
+          required: true
+          schema:
+            type: string
+        - name: country
+          in: formData
+          description: a new country
+          required: true
+          schema:
+            type: string
+        - name: shippingRegionId
+          in: formData
+          description: a new shipping region ID
+          required: true
+          schema:
+            type: integer
+      security:
+        - userKey: []
+      responses:
+        '200':
+          description: A customer object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - data
+                      - message
+                    properties:
+                      message:
+                        example: customer updated successfully
+                      data:
+                        $ref: './schemas.yaml#/components/schemas/UpdatedCustomerAddress'
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+  /customer/creditCard:
+    put:
+      tags:
+        - customers
+      summary: Update a customer's credit card
+      parameters:
+        - name: creditCard
+          in: formData
+          description: a new credit card
+          required: true
+          schema:
+            type: string
+      security:
+        - userKey: []
+      responses:
+        '200':
+          description: A customer object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - data
+                      - message
+                    properties:
+                      message:
+                        example: customer updated successfully
+                      data:
+                        $ref: './schemas.yaml#/components/schemas/UpdatedCustomerCreditCard'
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+
+  /orders:
+    post:
+      tags:
+        - orders
+      summary: Post a new order
+      security:
+        - userKey: []
+      parameters:
+        - name: cartId
+          in: formData
+          description: cart ID
+          required: true
+          schema:
+            type: string
+        - name: shippingId
+          in: formData
+          description: shipping ID
+          required: true
+          schema:
+            type: integer
+        - name: taxId
+          in: formData
+          description: tax ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: An order object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - data
+                      - message
+                    properties:
+                      message:
+                        example: order posted successfully
+                      data:
+                        type: integer
+                        example: 1
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+        '404':
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: cart not found
+  /orders/{order_id}:
+    get:
+      tags:
+        - orders
+      summary: Get a single order
+      parameters:
+        - name: order_id
+          in: path
+          description: id of the order to be retrieved
+          required: true
+          schema:
+            type: integer
+      security:
+        - userKey: []
+      responses:
+        '200':
+          description: A single order object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: 'product retrieved successfully'
+                      data:
+                        $ref: './schemas.yaml#/components/schemas/Order'
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+        '404':
+          description: The order does not exist
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: order not found
+  /orders/inCustomer:
+    get:
+      tags:
+        - orders
+      summary: Get all customer orders
+      security:
+        - userKey: []
+      responses:
+        '200':
+          description: A single order object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: 'customer orders retrieved successfully'
+                      data:
+                        type: array
+                        items:
+                          $ref: './schemas.yaml#/components/schemas/CustomerOrder'
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+  /orders/shortDetail/{order_id}:
+    get:
+      tags:
+        - orders
+      summary: Get information about a single order
+      parameters:
+        - name: order_id
+          in: path
+          description: id of the order to be retrieved
+          required: true
+          schema:
+            type: integer
+      security:
+        - userKey: []
+      responses:
+        '200':
+          description: A single order object
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: 'order details retrieved successfully'
+                      data:
+                        $ref: './schemas.yaml#/components/schemas/CustomerOrder'
+        '401':
+          description: No token provided in header
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no token provided
+
+  /shoppingcart/generateUniqueId:
+    get:
+      tags:
+        - shoppingcart
+      summary: Get a unique cart ID
+      responses:
+        '200':
+          description: A new unique cart ID
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: unique id generated successfully
+                      data:
+                        type: string
+                        example: jvD1P9MAF15NWax45m5DzU
+  /shoppingcart/add:
+    post:
+      tags:
+        - shoppingcart
+      summary: Add a product to a cart
+      parameters:
+        - name: cartId
+          in: formData
+          description: id of the cart to update
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: formData
+          description: id of product to add to cart
+          required: true
+          schema:
+            type: integer
+        - name: quantity
+          in: formData
+          description: quantity of product to add to cart
+          schema:
+            type: integer
+            default: 1
+        - name: attributes
+          in: formData
+          description: attributes of product being added to the cart
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Product added to cart successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: product added to cart successfully
+                      data:
+                        type: array
+                        items:
+                          $ref: './schemas.yaml#/components/schemas/AddToCart'
+        '404':
+          description: The product does not exist
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: product not found
+  /shoppingcart/{cart_id}:
+    get:
+      tags:
+        - shoppingcart
+      summary: Get items in a cart
+      parameters:
+        - name: cart_id
+          in: path
+          description: id of the cart to be retrieved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: An array of cart items
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: 'products retrieved successfully'
+                      data:
+                        type: array
+                        items:
+                          $ref: './schemas.yaml#/components/schemas/AddToCart'
+        '404':
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: cart not found
+    delete:
+      tags:
+        - shoppingcart
+      summary: Clear a cart
+      responses:
+        '200':
+          description: Cart cleared successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: 'cart cleared successfully'
+                      data:
+                        type: array
+                        items:
+                          type: ''
+        '404':
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: cart not found
+  /shoppingcart/update/{item_id}:
+    put:
+      tags:
+        - shoppingcart
+      summary: Update the quantity of an item in a cart
+      parameters:
+        - name: item_id
+          in: path
+          description: id of the item to be updated
+          required: true
+          schema:
+            type: integer
+        - name: quantity
+          in: formData
+          description: new quantity of the item
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: An array of cart items
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: item quantity updated successfully
+                      data:
+                        type: array
+                        items:
+                          $ref: './schemas.yaml#/components/schemas/AddToCart'
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: item not found
+  /shoppingcart/moveToCart/{item_id}:
+    get:
+      tags:
+        - shoppingcart
+      summary: Move a product to a cart
+      parameters:
+        - name: item_id
+          in: path
+          description: id of the item to be moved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item moved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        example: item moved successfully
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: item not found
+  /shoppingcart/totalAmount/{cart_id}:
+    get:
+      tags:
+        - shoppingcart
+      summary: Get the total cost of items in a cart
+      parameters:
+        - name: cart_id
+          in: path
+          description: id of the cart
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Amount retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: total amount retrieved successfully
+                      data:
+                        type: object
+                        properties:
+                          totalAmount:
+                            type: string
+                            example: 14.99
+        '404':
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: cart not found
+  /shoppingcart/saveForLater/{item_id}:
+    get:
+      tags:
+        - shoppingcart
+      summary: Save a product to a wishlist
+      parameters:
+        - name: item_id
+          in: path
+          description: id of the item to be saved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item saved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        example: item saved for later successfully
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: item not found
+  /shoppingcart/getSaved/{cart_id}:
+    get:
+      tags:
+        - shoppingcart
+      summary: Get all products in the wishlist
+      parameters:
+        - name: cart_id
+          in: path
+          description: id of the cart
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Items retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                      - data
+                    properties:
+                      message:
+                        example: 'items retrieved successfully'
+                      data:
+                        type: array
+                        items:
+                          $ref: './schemas.yaml#/components/schemas/AddToCart'
+        '404':
+          description: Items not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: no saved items found for cart with ID {cart_id}
+  /shoppingcart/removeProduct/{item_id}:
+    delete:
+      tags:
+        - shoppingcart
+      summary: Remove a product from a cart
+      parameters:
+        - name: item_id
+          in: path
+          description: id of the item to be removed
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item removed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Success'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        example: item removed successfully
+        '404':
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: item not found
+
+  /tax:
+    get:
+      tags:
+        - tax
+      summary: Get all available taxes
+      responses:
+        '200':
+            description: A list of tax objects
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: './schemas.yaml#/components/schemas/Success'
+                    - required:
+                        - message
+                        - data
+                      properties:
+                        message:
+                          example: taxes retrieved successfully
+                        data:
+                          type: array
+                          items:
+                            $ref: './schemas.yaml#/components/schemas/Tax'
+  /tax/{tax_id}:
+    get:
+      tags:
+        - tax
+      summary: Get a single tax
+      parameters:
+        - name: tax_id
+          in: path
+          description: id of the tax to be retrieved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: A tax object
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: './schemas.yaml#/components/schemas/Success'
+                    - required:
+                        - message
+                        - data
+                      properties:
+                        message:
+                          example: taxes removed successfully
+                        data:
+                          $ref: './schemas.yaml#/components/schemas/Tax'
+        '404':
+          description: Tax not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: tax not found
+
+  /shipping/regions:
+    get:
+      tags:
+        - shipping
+      summary: Get all available shipping regions
+      responses:
+        '200':
+            description: A list of shipping region objects
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: './schemas.yaml#/components/schemas/Success'
+                    - required:
+                        - message
+                        - data
+                      properties:
+                        message:
+                          example: shipping regions retrieved successfully
+                        data:
+                          type: array
+                          items:
+                            $ref: './schemas.yaml#/components/schemas/ShippingRegion'
+  /shipping/regions/{shipping_region_id}:
+    get:
+      tags:
+        - shipping
+      summary: Get a single shipping region
+      parameters:
+        - name: shipping_region_id
+          in: path
+          description: id of the shipping region to be retrieved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: A list of single shipping region details
+            content:
+              application/json:
+                schema:
+                  allOf:
+                    - $ref: './schemas.yaml#/components/schemas/Success'
+                    - required:
+                        - message
+                        - data
+                      properties:
+                        message:
+                          example: shipping details retrieved successfully
+                        data:
+                          type: array
+                          items:
+                            $ref: './schemas.yaml#/components/schemas/SingleShippingRegion'
+        '404':
+          description: Shipping details not found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: './schemas.yaml#/components/schemas/Error'
+                  - required:
+                      - message
+                    properties:
+                      message:
+                        type: string
+                        example: details not found for shipping with ID {shipping_region_id}
