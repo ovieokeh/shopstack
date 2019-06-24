@@ -1,11 +1,11 @@
 # shopstack
-A full-stack E-Commerce solution built for the Turing project test.
+A full-stack E-Commerce solution built entirely with JavaScript
 
 [![Build Status](https://travis-ci.com/ovieokeh/ecommerce-turing.svg?token=ib4xukwyyyzrf2XQqfZc&branch=develop)](https://travis-ci.com/ovieokeh/ecommerce-turing)
 [![Maintainability](https://api.codeclimate.com/v1/badges/14f7f4b747b1a3356b58/maintainability)](https://codeclimate.com/github/ovieokeh/ecommerce-turing/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/14f7f4b747b1a3356b58/test_coverage)](https://codeclimate.com/github/ovieokeh/ecommerce-turing/test_coverage)
 
-This is a monorepo containing the API and Frontend of the Turing Fullstack test.
+This is a monorepo containing the API and Frontend of the Shopstack e-commerce platform.
 
 This project is an E-Commerce store that sells T-Shirts powered with a Stripe payment system. Here are the technologies used in the project.
 

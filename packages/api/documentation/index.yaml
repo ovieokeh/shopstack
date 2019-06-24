@@ -7,7 +7,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: https://shopstack-sandbox.herokuapp.com
+  - url: https://shopstack-sandbox.herokuapp.com/api
   - url: http://localhost:3080/api
 components:
   securitySchemes:
