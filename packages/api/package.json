@@ -40,7 +40,7 @@
     "express-validator": "^5.3.1",
     "jsdoc": "^3.6.2",
     "json-refs": "^3.0.13",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mysql2": "^1.6.5",
     "redis": "^2.8.0",
     "serve": "^11.0.1",
